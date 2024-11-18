@@ -61,10 +61,10 @@ export class UsuariosService {
 
   async findAll(nome?: string, sessionToken?: string) {
     if (nome) {
-      this.databaseService.usuario.findMany({ where: { nome } });
+      return this.databaseService.usuario.findMany({ where: { nome } });
     }
     if (sessionToken) {
-      this.databaseService.usuario.findMany({ where: { sessionToken } });
+      return this.databaseService.usuario.findMany({ where: { sessionToken } });
     }
     return this.databaseService.usuario.findMany({
       include: {
