@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Banco {
+  id    Int     @id @default(autoincrement())
+  nome  String  @unique @db.VarChar(50)
+  ativo Boolean @default(true)
+  Conta Conta[]
+}
+
+model Conta {
+  id        Int     @id @default(autoincrement())
+  descricao String  @db.VarChar(50)
+  tipo      String  @db.VarChar(1)
+  ativo     Boolean @default(true)
+  conta     String  @db.VarChar(20)
+  agencia   String  @db.VarChar(20)
+  idBanco   Int
+  idEmpresa Int
+  idUsuario Int
+  Banco     Banco   @relation(fields: [idBanco], references: [id])
+  Empresa   Empresa @relation(fields: [idEmpresa], references: [id])
+  Usuario   Usuario @relation(fields: [idUsuario], references: [id])
+
+  @@index([idBanco], map: "Conta_idBanco_fkey")
+  @@index([idEmpresa], map: "Conta_idEmpresa_fkey")
+  @@index([idUsuario], map: "Conta_idUsuario_fkey")
+}
+
+model ContaContabil {
+  id         Int          @id @default(autoincrement())
+  nome       String
+  ativo      Boolean      @default(true)
+  ContaPagar ContaPagar[]
+  SubConta   SubConta[]
+}
+
+model ContaPagar {
+  id                 Int            @id @default(autoincrement())
+  nfe                Int
+  serie              Int
+  criadoEm           DateTime       @default(now())
+  doc                String         @db.VarChar(15)
+  valor              Decimal
+  dataVencimento     DateTime
+  descricao          String         @db.VarChar(50)
+  percentualJuros    Decimal
+  percentualDesconto Decimal
+  valorPago          Decimal
+  situacao           String         @db.VarChar(10)
+  flag               Boolean
+  codBarras          String         @db.VarChar(70)
+  especie            String         @db.VarChar(20)
+  idFornecedor       Int
+  idUsuario          Int
+  idEmpresa          Int
+  idFormaPagamento   Int
+  idContaContabil    Int
+  idSubConta         Int
+  dataEmissao        DateTime
+  ContaContabil      ContaContabil  @relation(fields: [idContaContabil], references: [id])
+  Empresa            Empresa        @relation(fields: [idEmpresa], references: [id])
+  FormaPagamento     FormaPagamento @relation(fields: [idFormaPagamento], references: [id])
+  Pessoa             Pessoa         @relation(fields: [idFornecedor], references: [id])
+  SubConta           SubConta       @relation(fields: [idSubConta], references: [id])
+  Usuario            Usuario        @relation(fields: [idUsuario], references: [id])
+  Pagamento          Pagamento[]
+
+  @@index([idEmpresa], map: "ContaPagar_idEmpresa_fkey")
+  @@index([idFormaPagamento], map: "ContaPagar_idFormaPagamento_fkey")
+  @@index([idFornecedor], map: "ContaPagar_idFornecedor_fkey")
+  @@index([idUsuario], map: "ContaPagar_idUsuario_fkey")
+  @@index([idContaContabil], map: "ContaPagar_idContaContabil_fkey")
+  @@index([idSubConta], map: "ContaPagar_idSubConta_fkey")
+}
+
+model Empresa {
+  id             Int              @id @default(autoincrement())
+  fantasia       String           @db.VarChar(50)
+  razao          String           @db.VarChar(50)
+  tipo           String?          @db.VarChar(10)
+  cnpj           String           @unique @db.VarChar(20)
+  ie             String?          @db.VarChar(20)
+  im             String?          @db.VarChar(20)
+  endereco       String           @db.VarChar(50)
+  numero         String           @db.VarChar(10)
+  complemento    String?          @db.VarChar(40)
+  bairro         String           @db.VarChar(35)
+  cidade         String           @db.VarChar(35)
+  uf             String           @db.VarChar(2)
+  cep            String           @db.VarChar(8)
+  fone           String           @db.VarChar(20)
+  site           String?          @db.VarChar(60)
+  fundacao       DateTime
+  email          String           @db.VarChar(100)
+  ativo          Boolean          @default(true)
+  idUsuario      Int
+  apelido        String?          @db.VarChar(50)
+  Conta          Conta[]
+  ContaPagar     ContaPagar[]
+  Usuario        Usuario          @relation(fields: [idUsuario], references: [id])
+  EmpresaUsuario EmpresaUsuario[]
+  Pessoa         Pessoa[]
+
+  @@index([idUsuario], map: "Empresa_idUsuario_fkey")
+}
+
+model EmpresaUsuario {
+  idEmpresa Int
+  idUsuario Int
+  Empresa   Empresa @relation(fields: [idEmpresa], references: [id], onDelete: Cascade)
+  Usuario   Usuario @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+
+  @@id([idEmpresa, idUsuario])
+  @@index([idUsuario], map: "EmpresaUsuario_idUsuario_fkey")
+}
+
+model FormaPagamento {
+  id         Int          @id @default(autoincrement())
+  descricao  String       @db.VarChar(50)
+  ativo      Boolean      @default(true)
+  parcelas   Int
+  intervalo  Int
+  taxa       Decimal      @db.Decimal(15, 2)
+  entrada    Decimal      @db.Decimal(15, 2)
+  tipo       String       @db.VarChar(1)
+  dias       Int?         @db.SmallInt
+  ContaPagar ContaPagar[]
+}
+
+model Gerencia {
+  id    Int     @id @default(autoincrement())
+  nome  String  @unique @db.VarChar(50)
+  ativo Boolean @default(true)
+}
+
+model Pagamento {
+  id                 Int        @id @default(autoincrement())
+  dataPagamento      DateTime?
+  dataVencimento     DateTime
+  valorParcela       Decimal    @db.Decimal(15, 2)
+  percentualJuros    Decimal?   @db.Decimal(15, 2)
+  percentualDesconto Decimal?   @db.Decimal(15, 2)
+  numCheque          Int?
+  lote               Int
+  idContaPagar       Int
+  ContaPagar         ContaPagar @relation(fields: [idContaPagar], references: [id], onDelete: Cascade)
+
+  @@index([idContaPagar], map: "Pagamento_idContaPagar_fkey")
+}
+
+model Pessoa {
+  id               Int          @id @default(autoincrement())
+  razao            String       @db.VarChar(50)
+  cnpj             String       @unique @db.VarChar(20)
+  endereco         String       @db.VarChar(50)
+  numero           String       @db.VarChar(10)
+  complemento      String?      @db.VarChar(40)
+  bairro           String       @db.VarChar(35)
+  cidade           String       @db.VarChar(35)
+  uf               String       @db.VarChar(2)
+  cep              String       @db.VarChar(8)
+  diaPagamento     Int?         @db.SmallInt
+  obs              String?
+  isFornecedor     Boolean      @default(true)
+  isCliente        Boolean?
+  isFabricante     Boolean?
+  isTransportadora Boolean?
+  ativo            Boolean      @default(true)
+  dataCadastro     DateTime     @default(now())
+  idEmpresa        Int
+  email            String?      @db.VarChar(100)
+  telefone         String?      @db.VarChar(25)
+  ContaPagar       ContaPagar[]
+  Empresa          Empresa      @relation(fields: [idEmpresa], references: [id])
+
+  @@index([idEmpresa], map: "Pessoa_idEmpresa_fkey")
+}
+
+model SubConta {
+  id              Int           @id @default(autoincrement())
+  nome            String
+  ativo           Boolean       @default(true)
+  idContaContabil Int
+  ContaPagar      ContaPagar[]
+  ContaContabil   ContaContabil @relation(fields: [idContaContabil], references: [id])
+
+  @@index([idContaContabil], map: "SubConta_idContaContabil_fkey")
+}
+
+model Usuario {
+  id             Int              @id @default(autoincrement())
+  nome           String           @db.VarChar(50)
+  salt           String
+  senha          String
+  sessionToken   String?
+  ativo          Boolean          @default(true)
+  Conta          Conta[]
+  ContaPagar     ContaPagar[]
+  Empresa        Empresa[]
+  EmpresaUsuario EmpresaUsuario[]
+}
