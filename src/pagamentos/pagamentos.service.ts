@@ -12,6 +12,25 @@ export class PagamentosService {
     });
   }
 
+  async findAll() {
+    return this.databaseService.pagamento.findMany({
+      include: {
+        ContaPagar: true,
+      },
+    });
+  }
+
+  async findOne(id: number) {
+    return this.databaseService.pagamento.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        ContaPagar: true,
+      },
+    });
+  }
+
   async update(id: number, data: Prisma.PagamentoUpdateInput) {
     return this.databaseService.pagamento.update({
       where: {

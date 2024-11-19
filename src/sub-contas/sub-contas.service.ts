@@ -8,6 +8,7 @@ export class SubContasService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   create(data: CreateSubContaDto) {
+    console.log(data);
     return this.databaseService.subConta.create({
       data,
     });

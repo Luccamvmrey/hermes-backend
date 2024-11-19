@@ -11,6 +11,6 @@ export class CreateSubContaDto {
   @ApiProperty({ required: false })
   ativo?: boolean;
 
-  @ApiProperty({ required: false })
+  @ApiProperty()
   ContaContabil: Prisma.ContaContabilCreateNestedOneWithoutSubContaInput;
 }
