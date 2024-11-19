@@ -60,13 +60,9 @@ export class UsuariosService {
   }
 
   async findAll(nome?: string, sessionToken?: string) {
-    if (nome) {
-      return this.databaseService.usuario.findMany({ where: { nome } });
-    }
-    if (sessionToken) {
-      return this.databaseService.usuario.findMany({ where: { sessionToken } });
-    }
+    const where = nome ? { nome } : sessionToken ? { sessionToken } : {};
     return this.databaseService.usuario.findMany({
+      where,
       include: {
         EmpresaUsuario: {
           include: {
@@ -102,12 +98,14 @@ export class UsuariosService {
       }
     }
 
-    return this.databaseService.usuario.update({
-      where: {
-        id,
-      },
-      data: updateUsuarioDto.usuarioData,
-    });
+    if (updateUsuarioDto.usuarioData) {
+      return this.databaseService.usuario.update({
+        where: {
+          id,
+        },
+        data: updateUsuarioDto.usuarioData,
+      });
+    }
   }
 
   async remove(id: number) {
