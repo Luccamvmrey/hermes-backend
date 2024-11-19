@@ -15,7 +15,12 @@ export class PagamentosService {
   async findAll() {
     return this.databaseService.pagamento.findMany({
       include: {
-        ContaPagar: true,
+        ContaPagar: {
+          include: {
+            Pessoa: true,
+            FormaPagamento: true,
+          },
+        },
       },
     });
   }
@@ -26,7 +31,12 @@ export class PagamentosService {
         id,
       },
       include: {
-        ContaPagar: true,
+        ContaPagar: {
+          include: {
+            Pessoa: true,
+            FormaPagamento: true,
+          },
+        },
       },
     });
   }
