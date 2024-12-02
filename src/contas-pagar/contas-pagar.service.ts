@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CreateContasPagarDto } from './dto/create-contas-pagar.dto';
 import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { DatabaseService } from '../database/database.service';
@@ -9,6 +9,7 @@ import { FormasPagamentoService } from '../formas-pagamento/formas-pagamento.ser
 export class ContasPagarService {
   constructor(
     private readonly databaseService: DatabaseService,
+    @Inject(forwardRef(() => PagamentosService))
     private readonly pagamentosService: PagamentosService,
     private readonly formasPagamentoService: FormasPagamentoService,
   ) {}
@@ -71,6 +72,16 @@ export class ContasPagarService {
       },
       data,
     });
+  }
+
+  async updateValorTotal(id: number) {
+    const contaPagar = await this.findOne(id);
+    const newTotalValue = contaPagar.Pagamento.reduce(
+      (acc, pagamento) => acc + Number(pagamento.valorParcela),
+      0,
+    );
+
+    return this.update(id, { valor: newTotalValue });
   }
 
   async remove(id: number) {

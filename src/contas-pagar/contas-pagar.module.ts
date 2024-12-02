@@ -9,5 +9,6 @@ import { FormasPagamentoModule } from "../formas-pagamento/formas-pagamento.modu
   imports: [DatabaseModule, PagamentosModule, FormasPagamentoModule],
   controllers: [ContasPagarController],
   providers: [ContasPagarService],
+  exports: [ContasPagarService],
 })
 export class ContasPagarModule {}
