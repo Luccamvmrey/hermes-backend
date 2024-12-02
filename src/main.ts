@@ -25,7 +25,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT ?? 443);
+  await app.listen(process.env.PORT ?? 443, '0.0.0.0');
 
   const logger = new Logger();
   logger.debug(`Server is running on: ${await app.getUrl()}`);
