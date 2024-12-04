@@ -145,8 +145,10 @@ model Pagamento {
   dataPagamento      DateTime?
   dataVencimento     DateTime
   valorParcela       Decimal    @db.Decimal(15, 2)
+  valorPago          Decimal?   @db.Decimal(15, 2)
   percentualJuros    Decimal?   @db.Decimal(15, 2)
   percentualDesconto Decimal?   @db.Decimal(15, 2)
+  statusPagamento    String     @default("Pendente")
   numCheque          Int?
   lote               Int
   idContaPagar       Int
