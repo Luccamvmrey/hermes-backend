@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { ContasPagarService } from '../contas-pagar/contas-pagar.service';
 import { Prisma } from '@prisma/client';
@@ -49,7 +49,7 @@ export class PagamentosService {
   }
 
   async update(id: number, data: Prisma.PagamentoUpdateInput) {
-    const pagamento = await this.databaseService.pagamento.update({
+    let pagamento = await this.databaseService.pagamento.update({
       where: {
         id,
       },
@@ -59,5 +59,21 @@ export class PagamentosService {
     if (data.valorParcela) {
       await this.contasPagarService.updateValorTotal(pagamento.idContaPagar);
     }
+
+    if (data.valorPago) {
+      pagamento = await this.databaseService.pagamento.update({
+        where: {
+          id,
+        },
+        data: {
+          statusPagamento:
+            data.valorPago === pagamento.valorParcela ? 'PAGO' : 'PARCIAL',
+        },
+      });
+
+      await this.contasPagarService.updateValorPago(pagamento.idContaPagar);
+    }
+
+    return pagamento;
   }
 }
