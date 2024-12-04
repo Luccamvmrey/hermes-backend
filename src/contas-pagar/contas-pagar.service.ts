@@ -84,6 +84,16 @@ export class ContasPagarService {
     return this.update(id, { valor: newTotalValue });
   }
 
+  async updateValorPago(id: number) {
+    const contaPagar = await this.findOne(id);
+    const newTotalValue = contaPagar.Pagamento.reduce(
+      (acc, pagamento) => acc + Number(pagamento.valorPago),
+      0,
+    );
+
+    return this.update(id, { valorPago: newTotalValue });
+  }
+
   async remove(id: number) {
     return this.databaseService.contaPagar.delete({
       where: {
