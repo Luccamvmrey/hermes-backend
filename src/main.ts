@@ -1,12 +1,12 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Logger, ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['verbose']
+    logger: ['verbose'],
   });
 
   app.enableCors();
@@ -26,9 +26,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT ?? 443, '0.0.0.0');
-
-  const logger = new Logger();
-  logger.debug(`Server is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();

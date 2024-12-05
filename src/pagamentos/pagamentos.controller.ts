@@ -21,6 +21,9 @@ export class PagamentosController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePagamentoDto: Prisma.PagamentoUpdateInput
   ) {
+    if (updatePagamentoDto.valorPago) {
+      return this.pagamentosService.updateValorPago(id, Number(updatePagamentoDto.valorPago));
+    }
     return this.pagamentosService.update(id, updatePagamentoDto);
   }
 }

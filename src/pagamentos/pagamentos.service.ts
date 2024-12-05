@@ -60,19 +60,20 @@ export class PagamentosService {
       await this.contasPagarService.updateValorTotal(pagamento.idContaPagar);
     }
 
-    if (data.valorPago) {
-      pagamento = await this.databaseService.pagamento.update({
-        where: {
-          id,
-        },
-        data: {
-          statusPagamento:
-            data.valorPago === pagamento.valorParcela ? 'PAGO' : 'PARCIAL',
-        },
-      });
+    return pagamento;
+  }
 
-      await this.contasPagarService.updateValorPago(pagamento.idContaPagar);
-    }
+  async updateValorPago(id: number, valorPago: number) {
+    const pagamentoAntigo = await this.findOne(id);
+    const valorAtualizado = Number(pagamentoAntigo.valorPago) + valorPago;
+
+    const pagamento = await this.update(id, {
+      valorPago: valorAtualizado,
+      statusPagamento:
+        valorAtualizado === Number(pagamentoAntigo.valorParcela) ? 'Pago' : 'Parcial',
+    });
+
+    await this.contasPagarService.updateValorPago(pagamento.idContaPagar);
 
     return pagamento;
   }
