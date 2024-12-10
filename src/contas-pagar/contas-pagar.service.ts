@@ -94,6 +94,16 @@ export class ContasPagarService {
     return this.update(id, { valorPago: newTotalValue });
   }
 
+  async updateLoteParcelas(id: number) {
+    const contaPagar = await this.findOne(id);
+    const { Pagamento } = contaPagar;
+
+    for (let i = 0; i < Pagamento.length; i++) {
+      const pagamento = Pagamento[i];
+      await this.pagamentosService.update(pagamento.id, { lote: i + 1 });
+    }
+  }
+
   async remove(id: number) {
     return this.databaseService.contaPagar.delete({
       where: {

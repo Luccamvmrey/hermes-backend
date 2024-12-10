@@ -149,10 +149,15 @@ model Pagamento {
   percentualJuros    Decimal?   @db.Decimal(15, 2)
   percentualDesconto Decimal?   @db.Decimal(15, 2)
   statusPagamento    String     @default("Pendente")
+  statusAutorizacao  String     @default("Pendente")
   numCheque          Int?
   lote               Int
   idContaPagar       Int
   ContaPagar         ContaPagar @relation(fields: [idContaPagar], references: [id], onDelete: Cascade)
+  idAutorizante      Int?
+  Autorizante        Usuario?   @relation("Autorizante", fields: [idAutorizante], references: [id])
+  idPagador          Int?
+  Pagador            Usuario?   @relation("Pagador", fields: [idPagador], references: [id])
 
   @@index([idContaPagar], map: "Pagamento_idContaPagar_fkey")
 }
@@ -197,14 +202,16 @@ model SubConta {
 }
 
 model Usuario {
-  id             Int              @id @default(autoincrement())
-  nome           String           @db.VarChar(50)
-  salt           String
-  senha          String
-  sessionToken   String?
-  ativo          Boolean          @default(true)
-  Conta          Conta[]
-  ContaPagar     ContaPagar[]
-  Empresa        Empresa[]
-  EmpresaUsuario EmpresaUsuario[]
+  id                    Int              @id @default(autoincrement())
+  nome                  String           @db.VarChar(50)
+  salt                  String
+  senha                 String
+  sessionToken          String?
+  ativo                 Boolean          @default(true)
+  Conta                 Conta[]
+  ContaPagar            ContaPagar[]
+  Empresa               Empresa[]
+  EmpresaUsuario        EmpresaUsuario[]
+  PagamentosAutorizados Pagamento[]      @relation("Autorizante")
+  ParcelasPagas         Pagamento[]      @relation("Pagador")
 }

@@ -28,6 +28,8 @@ export class PagamentosService {
             SubConta: true,
           },
         },
+        Autorizante: true,
+        Pagador: true,
       },
     });
   }
@@ -63,17 +65,47 @@ export class PagamentosService {
     return pagamento;
   }
 
-  async updateValorPago(id: number, valorPago: number) {
+  async updateValorPago(id: number, data: Prisma.PagamentoUpdateInput) {
     const pagamentoAntigo = await this.findOne(id);
-    const valorAtualizado = Number(pagamentoAntigo.valorPago) + valorPago;
+    const valorAtualizado = Number(pagamentoAntigo.valorPago) + Number(data.valorPago);
 
     const pagamento = await this.update(id, {
       valorPago: valorAtualizado,
       statusPagamento:
-        valorAtualizado === Number(pagamentoAntigo.valorParcela) ? 'Pago' : 'Parcial',
+        valorAtualizado === Number(pagamentoAntigo.valorParcela)
+          ? 'Pago'
+          : 'Parcial',
+      dataPagamento:
+        valorAtualizado === Number(pagamentoAntigo.valorParcela)
+          ? new Date()
+          : null,
+      Pagador: data.Pagador
     });
 
     await this.contasPagarService.updateValorPago(pagamento.idContaPagar);
+
+    return pagamento;
+  }
+
+  async remove(id: number) {
+    const pagamento = await this.findOne(id);
+    if (
+      pagamento.statusPagamento === 'Pago' ||
+      pagamento.statusPagamento === 'Parcial'
+    ) {
+      throw new Error(
+        'Não é possível excluir um pagamento que já foi pago ou parcialmente pago',
+      );
+    }
+
+    await this.databaseService.pagamento.delete({
+      where: {
+        id,
+      },
+    });
+
+    await this.contasPagarService.updateValorTotal(pagamento.idContaPagar);
+    await this.contasPagarService.updateLoteParcelas(pagamento.idContaPagar);
 
     return pagamento;
   }
