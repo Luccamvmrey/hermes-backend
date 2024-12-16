@@ -79,6 +79,7 @@ export class PagamentosService {
         valorAtualizado === Number(pagamentoAntigo.valorParcela)
           ? new Date()
           : null,
+      percentualJuros: data.percentualJuros ?? null,
       Pagador: data.Pagador
     });
 
