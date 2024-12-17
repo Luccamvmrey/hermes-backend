@@ -10,7 +10,9 @@ export class MinioClientService {
 
     public get client() {
         return this.minio.client;
+
     }
+
 
     constructor(
         private readonly minio: MinioService,
