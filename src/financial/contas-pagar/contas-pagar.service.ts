@@ -4,6 +4,8 @@ import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { DatabaseService } from '../../database/database.service';
 import { PagamentosService } from '../pagamentos/pagamentos.service';
 import { FormasPagamentoService } from '../../support-tables/formas-pagamento/formas-pagamento.service';
+import { MinioClientService } from "src/storage/minio-client.service";
+import { BufferedFile } from "src/storage/file.model";
 
 @Injectable()
 export class ContasPagarService {
@@ -12,6 +14,7 @@ export class ContasPagarService {
     @Inject(forwardRef(() => PagamentosService))
     private readonly pagamentosService: PagamentosService,
     private readonly formasPagamentoService: FormasPagamentoService,
+    private readonly minioClientService: MinioClientService,
   ) {}
 
   async create(data: CreateContasPagarDto) {
@@ -39,6 +42,19 @@ export class ContasPagarService {
     }
 
     return contaPagar;
+  }
+
+  async uploadContaPagarFiles(files: BufferedFile) {
+    const firstFile = files[0];
+    const uploadedFirstFile = await this.minioClientService.upload(firstFile);
+
+    const secondFile = files[1];
+    const uploadedSecondFile = await this.minioClientService.upload(secondFile);
+
+    return {
+      firstFileUrl: uploadedFirstFile.url,
+      secondFileUrl: uploadedSecondFile.url,
+    }
   }
 
   async findAll() {

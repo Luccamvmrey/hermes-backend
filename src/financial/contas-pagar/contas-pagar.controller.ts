@@ -13,6 +13,7 @@ import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ContasPagarEntity } from './entities/contas-pagar.entity';
 import { FilesInterceptor } from "@nestjs/platform-express";
+import { BufferedFile } from "src/storage/file.model";
 
 @Controller('contas-pagar')
 export class ContasPagarController {
@@ -26,8 +27,8 @@ export class ContasPagarController {
 
   @Post('/upload')
   @UseInterceptors(FilesInterceptor('files'))
-  uploadContaPagarFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
-    console.log(files);
+  uploadContaPagarFiles(@UploadedFiles() files: BufferedFile) {
+    return this.contasPagarService.uploadContaPagarFiles(files);
   }
 
   @Get()
