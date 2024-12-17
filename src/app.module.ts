@@ -15,6 +15,7 @@ import { ContasPagarModule } from './financial/contas-pagar/contas-pagar.module'
 import { PagamentosModule } from './financial/pagamentos/pagamentos.module';
 import { ContasContabeisModule } from './support-tables/contas-contabeis/contas-contabeis.module';
 import { SubContasModule } from './support-tables/sub-contas/sub-contas.module';
+import { MinioClientModule } from './storage/minio-client.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { SubContasModule } from './support-tables/sub-contas/sub-contas.module';
     PagamentosModule,
     ContasContabeisModule,
     SubContasModule,
+    MinioClientModule,
   ],
   controllers: [AppController],
   providers: [AppService],

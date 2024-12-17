@@ -5,13 +5,14 @@ import {
   Get,
   Param,
   Patch,
-  Post,
-} from '@nestjs/common';
+  Post, UploadedFiles, UseInterceptors
+} from "@nestjs/common";
 import { ContasPagarService } from './contas-pagar.service';
 import { CreateContasPagarDto } from './dto/create-contas-pagar.dto';
 import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { ContasPagarEntity } from './entities/contas-pagar.entity';
+import { FilesInterceptor } from "@nestjs/platform-express";
 
 @Controller('contas-pagar')
 export class ContasPagarController {
@@ -21,6 +22,12 @@ export class ContasPagarController {
   @ApiCreatedResponse({ type: ContasPagarEntity })
   create(@Body() createContasPagarDto: CreateContasPagarDto) {
     return this.contasPagarService.create(createContasPagarDto);
+  }
+
+  @Post('/upload')
+  @UseInterceptors(FilesInterceptor('files'))
+  uploadContaPagarFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+    console.log(files);
   }
 
   @Get()
