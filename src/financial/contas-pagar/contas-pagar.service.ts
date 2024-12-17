@@ -51,10 +51,11 @@ export class ContasPagarService {
     const secondFile = files[1];
     const uploadedSecondFile = await this.minioClientService.upload(secondFile);
 
-    return {
-      firstFileUrl: uploadedFirstFile.url,
-      secondFileUrl: uploadedSecondFile.url,
-    }
+    const obj1 = await this.minioClientService.getObject(uploadedFirstFile);
+    const obj2 = await this.minioClientService.getObject(uploadedSecondFile);
+    console.log(obj1);
+    console.log(obj2);
+
   }
 
   async findAll() {

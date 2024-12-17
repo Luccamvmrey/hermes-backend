@@ -28,6 +28,7 @@ export class ContasPagarController {
   @Post('/upload')
   @UseInterceptors(FilesInterceptor('files'))
   uploadContaPagarFiles(@UploadedFiles() files: BufferedFile) {
+
     return this.contasPagarService.uploadContaPagarFiles(files);
   }
 
