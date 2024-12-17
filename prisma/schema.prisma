@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Arquivo {
+  id           Int        @id @default(autoincrement())
+  filename     String
+  idContaPagar Int
+  ContaPagar   ContaPagar @relation(fields: [idContaPagar], references: [id])
+}
+
 model Banco {
   id    Int     @id @default(autoincrement())
   nome  String  @unique @db.VarChar(50)
@@ -71,6 +78,7 @@ model ContaPagar {
   SubConta           SubConta       @relation(fields: [idSubConta], references: [id])
   Usuario            Usuario        @relation(fields: [idUsuario], references: [id])
   Pagamento          Pagamento[]
+  Arquivo            Arquivo[]
 
   @@index([idEmpresa], map: "ContaPagar_idEmpresa_fkey")
   @@index([idFormaPagamento], map: "ContaPagar_idFormaPagamento_fkey")

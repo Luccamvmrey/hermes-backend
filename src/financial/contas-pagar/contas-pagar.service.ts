@@ -1,11 +1,9 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateContasPagarDto } from './dto/create-contas-pagar.dto';
 import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { DatabaseService } from '../../database/database.service';
 import { PagamentosService } from '../pagamentos/pagamentos.service';
 import { FormasPagamentoService } from '../../support-tables/formas-pagamento/formas-pagamento.service';
-import { MinioClientService } from "src/storage/minio-client.service";
-import { BufferedFile } from "src/storage/file.model";
 
 @Injectable()
 export class ContasPagarService {
@@ -14,7 +12,6 @@ export class ContasPagarService {
     @Inject(forwardRef(() => PagamentosService))
     private readonly pagamentosService: PagamentosService,
     private readonly formasPagamentoService: FormasPagamentoService,
-    private readonly minioClientService: MinioClientService,
   ) {}
 
   async create(data: CreateContasPagarDto) {
@@ -44,20 +41,6 @@ export class ContasPagarService {
     return contaPagar;
   }
 
-  async uploadContaPagarFiles(files: BufferedFile) {
-    const firstFile = files[0];
-    const uploadedFirstFile = await this.minioClientService.upload(firstFile);
-
-    const secondFile = files[1];
-    const uploadedSecondFile = await this.minioClientService.upload(secondFile);
-
-    const obj1 = await this.minioClientService.getObject(uploadedFirstFile);
-    const obj2 = await this.minioClientService.getObject(uploadedSecondFile);
-    console.log(obj1);
-    console.log(obj2);
-
-  }
-
   async findAll() {
     return this.databaseService.contaPagar.findMany({
       include: {
@@ -65,6 +48,7 @@ export class ContasPagarService {
         Empresa: true,
         Pessoa: true,
         FormaPagamento: true,
+        Arquivo: true,
       },
     });
   }
@@ -78,6 +62,7 @@ export class ContasPagarService {
         Pessoa: true,
         FormaPagamento: true,
         Pagamento: true,
+        Arquivo: true,
       },
     });
   }
