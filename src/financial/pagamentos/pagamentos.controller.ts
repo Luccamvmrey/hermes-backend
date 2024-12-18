@@ -1,14 +1,15 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Query } from "@nestjs/common";
 import { PagamentosService } from "./pagamentos.service";
 import { Prisma } from "@prisma/client";
+import { PaginationDto } from "../../common/pagination/dto/pagination.dto";
 
 @Controller('pagamentos')
 export class PagamentosController {
   constructor(private readonly pagamentosService: PagamentosService) {}
 
   @Get()
-  findAll() {
-    return this.pagamentosService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.pagamentosService.findAll(paginationDto);
   }
 
   @Get(':id')

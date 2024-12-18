@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { ContasPagarService } from '../contas-pagar/contas-pagar.service';
 import { Prisma } from '@prisma/client';
+import { PaginationDto } from '../../common/pagination/dto/pagination.dto';
 
 @Injectable()
 export class PagamentosService {
@@ -17,8 +18,12 @@ export class PagamentosService {
     });
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
+    const { offset, limit } = paginationDto;
+
     return this.databaseService.pagamento.findMany({
+      skip: offset,
+      take: limit,
       include: {
         ContaPagar: {
           include: {
@@ -26,6 +31,9 @@ export class PagamentosService {
             FormaPagamento: true,
             Pagamento: true,
             SubConta: true,
+            ContaContabil: true,
+            Arquivo: true,
+            Usuario: true,
           },
         },
         Autorizante: true,
@@ -67,20 +75,21 @@ export class PagamentosService {
 
   async updateValorPago(id: number, data: Prisma.PagamentoUpdateInput) {
     const pagamentoAntigo = await this.findOne(id);
-    const valorAtualizado = Number(pagamentoAntigo.valorPago) + Number(data.valorPago);
+    const valorAtualizado =
+      Number(pagamentoAntigo.valorPago) + Number(data.valorPago);
 
     const pagamento = await this.update(id, {
       valorPago: valorAtualizado,
       statusPagamento:
-        valorAtualizado === Number(pagamentoAntigo.valorParcela)
+        valorAtualizado >= Number(pagamentoAntigo.valorParcela)
           ? 'Pago'
           : 'Parcial',
       dataPagamento:
-        valorAtualizado === Number(pagamentoAntigo.valorParcela)
+        valorAtualizado >= Number(pagamentoAntigo.valorParcela)
           ? new Date()
           : null,
       percentualJuros: data.percentualJuros ?? null,
-      Pagador: data.Pagador
+      Pagador: data.Pagador,
     });
 
     await this.contasPagarService.updateValorPago(pagamento.idContaPagar);

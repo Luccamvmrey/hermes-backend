@@ -1,4 +1,4 @@
-import { Usuario } from '@prisma/client';
+import { $Enums, Usuario } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UsuarioEntity implements Usuario {
@@ -16,6 +16,12 @@ export class UsuarioEntity implements Usuario {
 
   @ApiProperty({ required: false })
   sessionToken: string;
+
+  @ApiProperty()
+  userRole: $Enums.UserRole;
+
+  @ApiProperty()
+  idGerencia: number;
 
   @ApiProperty()
   ativo: boolean;

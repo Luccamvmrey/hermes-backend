@@ -7,11 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  SUPORTE
+  ADMIN
+  SOLICITANTE
+  AUTORIZANTE
+  CAIXA
+}
+
 model Arquivo {
   id           Int        @id @default(autoincrement())
+  originalName String
   filename     String
   idContaPagar Int
-  ContaPagar   ContaPagar @relation(fields: [idContaPagar], references: [id])
+  ContaPagar   ContaPagar @relation(fields: [idContaPagar], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Banco {
@@ -146,6 +155,8 @@ model Gerencia {
   id    Int     @id @default(autoincrement())
   nome  String  @unique @db.VarChar(50)
   ativo Boolean @default(true)
+
+  Usuario Usuario[]
 }
 
 model Pagamento {
@@ -210,12 +221,16 @@ model SubConta {
 }
 
 model Usuario {
-  id                    Int              @id @default(autoincrement())
-  nome                  String           @db.VarChar(50)
-  salt                  String
-  senha                 String
-  sessionToken          String?
-  ativo                 Boolean          @default(true)
+  id           Int       @id @default(autoincrement())
+  nome         String    @db.VarChar(50)
+  salt         String
+  senha        String
+  sessionToken String?
+  ativo        Boolean   @default(true)
+  userRole     UserRole
+  idGerencia   Int?
+  Gerencia     Gerencia? @relation(fields: [idGerencia], references: [id])
+
   Conta                 Conta[]
   ContaPagar            ContaPagar[]
   Empresa               Empresa[]

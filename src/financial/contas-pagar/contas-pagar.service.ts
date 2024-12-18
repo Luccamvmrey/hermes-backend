@@ -63,6 +63,7 @@ export class ContasPagarService {
         FormaPagamento: true,
         Pagamento: true,
         Arquivo: true,
+        Usuario: true,
       },
     });
   }

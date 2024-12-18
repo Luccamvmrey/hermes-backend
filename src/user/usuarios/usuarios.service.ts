@@ -29,6 +29,8 @@ export class UsuariosService {
         nome: createUsuarioDto.nome,
         senha: hashedPassword,
         salt,
+        userRole: createUsuarioDto.userRole,
+        idGerencia: createUsuarioDto.idGerencia,
       },
     });
 

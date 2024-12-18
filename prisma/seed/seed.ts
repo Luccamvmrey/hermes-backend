@@ -13,6 +13,7 @@ async function main() {
       nome: 'rootA',
       senha: rootAPassword,
       salt: rootASalt,
+      userRole: 'ADMIN',
     },
   });
 
@@ -24,6 +25,7 @@ async function main() {
       nome: 'rootB',
       senha: rootBPassword,
       salt: rootBSalt,
+      userRole: 'ADMIN',
     },
   });
 

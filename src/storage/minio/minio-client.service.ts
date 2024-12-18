@@ -16,7 +16,7 @@ export class MinioClientService {
   async upload(files: Array<Express.Multer.File>, idContaPagar: number) {
     return await Promise.all(
       files.map(async (file) => {
-        const timestamp = new Date().toString();
+        const timestamp = Date.now().toString();
         const hashedFileName = crypto
           .createHash('md5')
           .update(timestamp)
@@ -41,7 +41,7 @@ export class MinioClientService {
           );
         }
 
-        return await this.arquivosService.create(fileName, idContaPagar);
+        return await this.arquivosService.create(fileName, file.originalname, idContaPagar);
       }),
     );
   }
