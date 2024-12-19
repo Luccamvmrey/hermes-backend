@@ -30,6 +30,13 @@ model Banco {
   Conta Conta[]
 }
 
+model CentroCusto {
+  id         Int          @id @default(autoincrement())
+  nome       String       @unique @db.VarChar(50)
+  ativo      Boolean      @default(true)
+  ContaPagar ContaPagar[]
+}
+
 model Conta {
   id        Int     @id @default(autoincrement())
   descricao String  @db.VarChar(50)
@@ -79,6 +86,7 @@ model ContaPagar {
   idFormaPagamento   Int
   idContaContabil    Int
   idSubConta         Int
+  idCentroCusto      Int
   dataEmissao        DateTime
   ContaContabil      ContaContabil  @relation(fields: [idContaContabil], references: [id])
   Empresa            Empresa        @relation(fields: [idEmpresa], references: [id])
@@ -86,6 +94,7 @@ model ContaPagar {
   Pessoa             Pessoa         @relation(fields: [idFornecedor], references: [id])
   SubConta           SubConta       @relation(fields: [idSubConta], references: [id])
   Usuario            Usuario        @relation(fields: [idUsuario], references: [id])
+  CentroCusto        CentroCusto    @relation(fields: [idCentroCusto], references: [id])
   Pagamento          Pagamento[]
   Arquivo            Arquivo[]
 
@@ -95,6 +104,7 @@ model ContaPagar {
   @@index([idUsuario], map: "ContaPagar_idUsuario_fkey")
   @@index([idContaContabil], map: "ContaPagar_idContaContabil_fkey")
   @@index([idSubConta], map: "ContaPagar_idSubConta_fkey")
+  @@index([idCentroCusto], map: "ContaPagar_idCentroCusto_fkey")
 }
 
 model Empresa {
