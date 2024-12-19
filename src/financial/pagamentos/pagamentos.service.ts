@@ -42,6 +42,37 @@ export class PagamentosService {
     });
   }
 
+  async findAllByUser(userId: number) {
+    return this.databaseService.pagamento.findMany({
+      where: {
+        ContaPagar: {
+          Empresa: {
+            EmpresaUsuario: {
+              some: {
+                idUsuario: userId,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        ContaPagar: {
+          include: {
+            Pessoa: true,
+            FormaPagamento: true,
+            Pagamento: true,
+            SubConta: true,
+            ContaContabil: true,
+            Arquivo: true,
+            Usuario: true,
+          },
+        },
+        Autorizante: true,
+        Pagador: true,
+      },
+    });
+  }
+
   async findOne(id: number) {
     return this.databaseService.pagamento.findUnique({
       where: {

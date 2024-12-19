@@ -12,6 +12,11 @@ export class PagamentosController {
     return this.pagamentosService.findAll(paginationDto);
   }
 
+  @Get('user/:userId')
+  findAllByUser(@Param('userId', ParseIntPipe) userId: number) {
+    return this.pagamentosService.findAllByUser(userId);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.pagamentosService.findOne(id);
