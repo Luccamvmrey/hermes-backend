@@ -68,4 +68,7 @@ export class ContasPagarEntity implements ContaPagar {
 
   @ApiProperty()
   dataEmissao: Date;
+
+    @ApiProperty()
+    idCentroCusto: number;
 }
