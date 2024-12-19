@@ -86,6 +86,10 @@ export class CreateContasPagarDto {
   @ApiProperty()
   SubConta: Prisma.SubContaCreateNestedOneWithoutContaPagarInput
 
+  @IsNotEmpty()
+  @ApiProperty()
+  CentroCusto: Prisma.CentroCustoCreateNestedOneWithoutContaPagarInput
+
   @ApiProperty({ required: false })
   Pagamento?: Prisma.PagamentoCreateNestedManyWithoutContaPagarInput;
 }
