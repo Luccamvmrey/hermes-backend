@@ -1,74 +1,71 @@
-import {ContaPagar} from "@prisma/client";
-import {Decimal} from '@prisma/client/runtime/library';
-import {ApiProperty} from "@nestjs/swagger";
+import { ContaPagar } from "@prisma/client";
+import { Decimal } from '@prisma/client/runtime/library';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class ContasPagarEntity implements ContaPagar {
-    @ApiProperty()
-    id: number;
+  @ApiProperty()
+  id: number;
 
-    @ApiProperty()
-    nfe: number;
+  @ApiProperty()
+  nfe: number;
 
-    @ApiProperty()
-    serie: number;
+  @ApiProperty()
+  serie: number;
 
-    @ApiProperty()
-    criadoEm: Date;
+  @ApiProperty()
+  criadoEm: Date;
 
-    @ApiProperty()
-    doc: string;
+  @ApiProperty()
+  doc: string;
 
-    @ApiProperty()
-    valor: Decimal;
+  @ApiProperty()
+  valor: Decimal;
 
-    @ApiProperty()
-    dataVencimento: Date;
+  @ApiProperty()
+  dataVencimento: Date;
 
-    @ApiProperty()
-    descricao: string;
+  @ApiProperty()
+  descricao: string;
 
-    @ApiProperty()
-    percentualJuros: Decimal;
+  @ApiProperty()
+  percentualJuros: Decimal;
 
-    @ApiProperty()
-    percentualDesconto: Decimal;
+  @ApiProperty()
+  percentualDesconto: Decimal;
 
-    @ApiProperty()
-    valorPago: Decimal;
+  @ApiProperty()
+  valorPago: Decimal;
 
-    @ApiProperty()
-    situacao: string;
+  @ApiProperty()
+  situacao: string;
 
-    @ApiProperty()
-    flag: boolean;
+  @ApiProperty()
+  flag: boolean;
 
-    @ApiProperty()
-    codBarras: string;
+  @ApiProperty()
+  codBarras: string;
 
-    @ApiProperty()
-    especie: string;
+  @ApiProperty()
+  especie: string;
 
-    @ApiProperty()
-    idFornecedor: number;
+  @ApiProperty()
+  idFornecedor: number;
 
-    @ApiProperty()
-    idUsuario: number;
+  @ApiProperty()
+  idUsuario: number;
 
-    @ApiProperty()
-    idEmpresa: number;
+  @ApiProperty()
+  idEmpresa: number;
 
-    @ApiProperty()
-    idFormaPagamento: number;
+  @ApiProperty()
+  idFormaPagamento: number;
 
-    @ApiProperty()
-    idContaContabil: number;
+  @ApiProperty()
+  idContaContabil: number;
 
-    @ApiProperty()
-    idCentroCusto: number;
+  @ApiProperty()
+  idSubConta: number;
 
-    @ApiProperty()
-    idSubConta: number;
-
-    @ApiProperty()
-    dataEmissao: Date;
+  @ApiProperty()
+  dataEmissao: Date;
 }

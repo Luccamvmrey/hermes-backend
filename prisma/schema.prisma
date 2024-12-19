@@ -75,11 +75,11 @@ model ContaPagar {
   descricao          String         @db.VarChar(50)
   percentualJuros    Decimal
   percentualDesconto Decimal
-  valorPago          Decimal
-  situacao           String         @db.VarChar(10)
-  flag               Boolean
-  codBarras          String         @db.VarChar(70)
-  especie            String         @db.VarChar(20)
+  valorPago          Decimal?
+  situacao           String?        @db.VarChar(10)
+  flag               Boolean        @default(true)
+  codBarras          String?        @db.VarChar(70)
+  especie            String?        @db.VarChar(20)
   idFornecedor       Int
   idUsuario          Int
   idEmpresa          Int
