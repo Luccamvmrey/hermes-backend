@@ -30,7 +30,7 @@ export class UsuariosService {
         senha: hashedPassword,
         salt,
         userRole: createUsuarioDto.userRole,
-        idGerencia: createUsuarioDto.idGerencia,
+        Gerencia: createUsuarioDto.Gerencia,
       },
     });
 
@@ -39,6 +39,7 @@ export class UsuariosService {
         await this.empresaUsuarioService.create({
           Empresa: { connect: { id: empresa } },
           Usuario: { connect: { id: newUsuario.id } },
+
         });
       }
     }
@@ -70,7 +71,9 @@ export class UsuariosService {
           include: {
             Empresa: true,
           },
+
         },
+        Gerencia: true,
       },
     });
   }

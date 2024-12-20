@@ -18,6 +18,7 @@ export class AuthController {
   @Post('create')
   @ApiOkResponse({ type: UsuarioEntity })
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
+
     return this.usuariosService.create(createUsuarioDto);
   }
 }

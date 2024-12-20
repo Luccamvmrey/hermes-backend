@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { $Enums } from "@prisma/client";
+import { $Enums, Prisma } from "@prisma/client";
 
 export class CreateUsuarioDto {
   @IsString()
@@ -17,10 +17,10 @@ export class CreateUsuarioDto {
   @ApiProperty()
   userRole: $Enums.UserRole;
 
-  @IsNumber()
+
   @IsOptional()
   @ApiProperty()
-  idGerencia: number;
+  Gerencia: Prisma.GerenciaCreateNestedOneWithoutUsuarioInput;
 
   @IsArray()
   @IsOptional()
