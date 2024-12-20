@@ -3,13 +3,14 @@ import {
   Controller,
   Delete,
   Get,
-  Param, ParseIntPipe,
+  Param,
+  ParseIntPipe,
   Patch,
-  Query
-} from "@nestjs/common";
+  Query,
+} from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { ApiOkResponse, ApiQuery } from "@nestjs/swagger";
+import { ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { UsuarioEntity } from './entity/usuario.entity';
 
 @Controller('usuarios')
@@ -17,8 +18,8 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Get()
-  @ApiQuery({name: 'nome', required: false})
-  @ApiQuery({name: 'sessionToken', required: false})
+  @ApiQuery({ name: 'nome', required: false })
+  @ApiQuery({ name: 'sessionToken', required: false })
   @ApiOkResponse({ type: UsuarioEntity, isArray: true })
   findAll(
     @Query('nome') nome?: string,

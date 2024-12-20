@@ -91,8 +91,13 @@ export class UsuariosService {
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+    const usuario = await this.findOne(id);
+    const newEmpresas = updateUsuarioDto.empresas?.filter((emp) => {
+      return !usuario.EmpresaUsuario.some((eu) => eu.Empresa.id === emp);
+    })
+
     if (updateUsuarioDto.empresas) {
-      for (let empresa of updateUsuarioDto.empresas) {
+      for (let empresa of newEmpresas) {
         await this.empresaUsuarioService.create({
           Empresa: { connect: { id: empresa } },
           Usuario: { connect: { id } },
