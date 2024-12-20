@@ -4,6 +4,7 @@ import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { DatabaseService } from '../../database/database.service';
 import { PagamentosService } from '../pagamentos/pagamentos.service';
 import { FormasPagamentoService } from '../../support-tables/formas-pagamento/formas-pagamento.service';
+import {Prisma} from "@prisma/client";
 
 @Injectable()
 export class ContasPagarService {
@@ -14,7 +15,7 @@ export class ContasPagarService {
     private readonly formasPagamentoService: FormasPagamentoService,
   ) {}
 
-  async create(data: CreateContasPagarDto) {
+  async create(data: Prisma.ContaPagarCreateInput) {
     const contaPagar = await this.databaseService.contaPagar.create({
       data,
     });
