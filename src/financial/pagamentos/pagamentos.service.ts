@@ -48,28 +48,44 @@ export class PagamentosService {
   async findAllByUser(userId: number) {
     const user = await this.usuariosService.findOne(userId);
 
-    const isSolicitante = user.userRole === 'SOLICITANTE';
-
-    return this.databaseService.pagamento.findMany({
-      where: {
-        ...(isSolicitante
-          ? {
-              ContaPagar: {
-                idUsuario: userId,
-              },
-            }
-          : {
-              ContaPagar: {
-                Empresa: {
-                  EmpresaUsuario: {
-                    some: {
-                      idUsuario: userId,
-                    },
-                  },
-                },
-              },
-            }),
+    // Construindo a cláusula inicial
+    let whereClause: any = {
+      ContaPagar: {
+        Empresa: {
+          EmpresaUsuario: {
+            some: {
+              idUsuario: userId,
+            },
+          },
+        },
       },
+    };
+
+    // Condição para usuários do tipo SOLICITANTE
+    if (user.userRole === 'SOLICITANTE') {
+      whereClause = {
+        ...whereClause,
+        ContaPagar: {
+          ...whereClause.ContaPagar,
+          idUsuario: userId, // Apenas pagamentos criados pelo usuário
+        },
+      };
+    }
+
+    // Condição para usuários do tipo CAIXA
+    if (
+      (user.userRole === 'CAIXA' || user.userRole === 'AUTORIZANTE') &&
+      user.valorMaximoOperacoes !== null
+    ) {
+      whereClause = {
+        ...whereClause,
+        valorParcela: { lte: user.valorMaximoOperacoes }, // Valor da parcela não pode ultrapassar o limite
+      };
+    }
+
+    // Query final
+    return this.databaseService.pagamento.findMany({
+      where: whereClause,
       include: {
         ContaPagar: {
           include: {

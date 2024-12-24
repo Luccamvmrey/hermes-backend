@@ -22,6 +22,8 @@ export class UsuariosService {
     const [existingUser] = await this.findAll(createUsuarioDto.nome);
     if (existingUser) throw new ConflictException();
 
+    console.log(createUsuarioDto);
+
     const salt = random();
     const hashedPassword = authentication(salt, createUsuarioDto.senha);
     const newUsuario = await this.databaseService.usuario.create({
@@ -31,6 +33,7 @@ export class UsuariosService {
         salt,
         userRole: createUsuarioDto.userRole,
         Gerencia: createUsuarioDto.Gerencia,
+        valorMaximoOperacoes: createUsuarioDto.valorMaximoOperacoes,
       },
     });
 

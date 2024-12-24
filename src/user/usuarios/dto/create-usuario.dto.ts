@@ -22,6 +22,10 @@ export class CreateUsuarioDto {
   @ApiProperty()
   Gerencia: Prisma.GerenciaCreateNestedOneWithoutUsuarioInput;
 
+  @IsNumber()
+  @ApiProperty()
+  valorMaximoOperacoes: number;
+
   @IsArray()
   @IsOptional()
   @ApiProperty({ required: false })
