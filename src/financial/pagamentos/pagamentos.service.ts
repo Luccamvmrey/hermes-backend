@@ -3,11 +3,13 @@ import { DatabaseService } from '../../database/database.service';
 import { ContasPagarService } from '../contas-pagar/contas-pagar.service';
 import { Prisma } from '@prisma/client';
 import { PaginationDto } from '../../common/pagination/dto/pagination.dto';
+import { UsuariosService } from '../../user/usuarios/usuarios.service';
 
 @Injectable()
 export class PagamentosService {
   constructor(
     private readonly databaseService: DatabaseService,
+    private readonly usuariosService: UsuariosService,
     @Inject(forwardRef(() => ContasPagarService))
     private readonly contasPagarService: ContasPagarService,
   ) {}
@@ -44,17 +46,29 @@ export class PagamentosService {
   }
 
   async findAllByUser(userId: number) {
+    const user = await this.usuariosService.findOne(userId);
+
+    const isSolicitante = user.userRole === 'SOLICITANTE';
+
     return this.databaseService.pagamento.findMany({
       where: {
-        ContaPagar: {
-          Empresa: {
-            EmpresaUsuario: {
-              some: {
+        ...(isSolicitante
+          ? {
+              ContaPagar: {
                 idUsuario: userId,
               },
-            },
-          },
-        },
+            }
+          : {
+              ContaPagar: {
+                Empresa: {
+                  EmpresaUsuario: {
+                    some: {
+                      idUsuario: userId,
+                    },
+                  },
+                },
+              },
+            }),
       },
       include: {
         ContaPagar: {
