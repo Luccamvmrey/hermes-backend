@@ -22,29 +22,52 @@ export class UsuariosService {
     const [existingUser] = await this.findAll(createUsuarioDto.nome);
     if (existingUser) throw new ConflictException();
 
-    console.log(createUsuarioDto);
+    const {
+      userRole,
+      permitirAutorizacaoPropria,
+      acessoAreasExternas,
+      senha,
+      nome,
+      Gerencia,
+      valorMaximoOperacoes,
+      empresas,
+    } = createUsuarioDto;
+
+    // Definindo as permissões baseadas no cargo
+    const canSelfAuthorize =
+      userRole === 'ADMIN' ||
+      userRole === 'SUPORTE' ||
+      (userRole === 'AUTORIZANTE' && permitirAutorizacaoPropria);
+    const canAccessExternalAreas =
+      userRole === 'ADMIN' || userRole === 'SUPORTE' || acessoAreasExternas;
 
     const salt = random();
-    const hashedPassword = authentication(salt, createUsuarioDto.senha);
+    const hashedPassword = authentication(salt, senha);
+
+    // Criando o novo usuário
     const newUsuario = await this.databaseService.usuario.create({
       data: {
-        nome: createUsuarioDto.nome,
+        nome,
         senha: hashedPassword,
         salt,
-        userRole: createUsuarioDto.userRole,
-        Gerencia: createUsuarioDto.Gerencia,
-        valorMaximoOperacoes: createUsuarioDto.valorMaximoOperacoes,
+        userRole,
+        Gerencia,
+        valorMaximoOperacoes,
+        permitirAutorizacaoPropria: canSelfAuthorize,
+        acessoAreasExternas: canAccessExternalAreas,
       },
     });
 
-    if (createUsuarioDto.empresas) {
-      for (let empresa of createUsuarioDto.empresas) {
-        await this.empresaUsuarioService.create({
-          Empresa: { connect: { id: empresa } },
-          Usuario: { connect: { id: newUsuario.id } },
-
-        });
-      }
+    // Conectando o usuário às empresas
+    if (empresas?.length) {
+      await Promise.all(
+        empresas.map((empresa) =>
+          this.empresaUsuarioService.create({
+            Empresa: { connect: { id: empresa } },
+            Usuario: { connect: { id: newUsuario.id } },
+          }),
+        ),
+      );
     }
 
     return newUsuario;
@@ -74,7 +97,6 @@ export class UsuariosService {
           include: {
             Empresa: true,
           },
-
         },
         Gerencia: true,
       },
@@ -100,7 +122,7 @@ export class UsuariosService {
     const usuario = await this.findOne(id);
     const newEmpresas = updateUsuarioDto.empresas?.filter((emp) => {
       return !usuario.EmpresaUsuario.some((eu) => eu.Empresa.id === emp);
-    })
+    });
 
     if (updateUsuarioDto.empresas) {
       for (let empresa of newEmpresas) {

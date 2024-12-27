@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { $Enums, Prisma } from "@prisma/client";
 
 export class CreateUsuarioDto {
@@ -25,6 +25,16 @@ export class CreateUsuarioDto {
   @IsNumber()
   @ApiProperty()
   valorMaximoOperacoes: number;
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty()
+  permitirAutorizacaoPropria: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty()
+  acessoAreasExternas: boolean;
 
   @IsArray()
   @IsOptional()

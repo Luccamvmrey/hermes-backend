@@ -24,6 +24,12 @@ export class UsuarioEntity implements Usuario {
   valorMaximoOperacoes: Prisma.Decimal | null
 
   @ApiProperty()
+  permitirAutorizacaoPropria: boolean;
+
+  @ApiProperty()
+  acessoAreasExternas: boolean;
+
+  @ApiProperty()
   idGerencia: number;
 
   @ApiProperty()
