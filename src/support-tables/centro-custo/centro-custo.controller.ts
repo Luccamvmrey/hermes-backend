@@ -34,7 +34,7 @@ export class CentroCustoController {
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.centroCustoService.findOne(id);
   }
-
+//
   @Patch(':id')
   @ApiOkResponse({ type: CentroCustoEntity })
   update(
