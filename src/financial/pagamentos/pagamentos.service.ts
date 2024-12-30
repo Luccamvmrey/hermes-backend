@@ -61,25 +61,29 @@ export class PagamentosService {
       },
     };
 
-    // Condição para usuários do tipo SOLICITANTE
-    if (user.userRole === 'SOLICITANTE') {
-      whereClause = {
-        ...whereClause,
-        ContaPagar: {
-          ...whereClause.ContaPagar,
-          idUsuario: userId, // Apenas pagamentos criados pelo usuário
-        },
+    // Adicionando o filtro de gerência, se aplicável
+    if (user?.idGerencia && !user?.acessoAreasExternas) {
+      whereClause.ContaPagar.Usuario = {
+        idGerencia: user?.idGerencia, // Apenas contas criadas por usuários na mesma gerência
       };
     }
 
-    // Condição para usuários do tipo CAIXA
+    // Condição para usuários do tipo SOLICITANTE
+    if (user?.userRole === 'SOLICITANTE') {
+      whereClause.ContaPagar = {
+        ...whereClause.ContaPagar,
+        idUsuario: userId, // Apenas pagamentos criados pelo usuário
+      };
+    }
+
+    // Condição para usuários do tipo CAIXA ou AUTORIZANTE
     if (
-      (user.userRole === 'CAIXA' || user.userRole === 'AUTORIZANTE') &&
-      user.valorMaximoOperacoes !== null
+      ['CAIXA', 'AUTORIZANTE'].includes(user?.userRole) &&
+      user?.valorMaximoOperacoes != null
     ) {
       whereClause = {
         ...whereClause,
-        valorParcela: { lte: user.valorMaximoOperacoes }, // Valor da parcela não pode ultrapassar o limite
+        valorParcela: { lte: user?.valorMaximoOperacoes },
       };
     }
 
@@ -104,7 +108,6 @@ export class PagamentosService {
       },
     });
   }
-
   async findOne(id: number) {
     return this.databaseService.pagamento.findUnique({
       where: {

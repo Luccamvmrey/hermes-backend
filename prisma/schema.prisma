@@ -231,16 +231,18 @@ model SubConta {
 }
 
 model Usuario {
-  id                   Int       @id @default(autoincrement())
-  nome                 String    @db.VarChar(50)
-  salt                 String
-  senha                String
-  sessionToken         String?
-  ativo                Boolean   @default(true)
-  userRole             UserRole
-  valorMaximoOperacoes Decimal?
-  idGerencia           Int?
-  Gerencia             Gerencia? @relation(fields: [idGerencia], references: [id])
+  id                         Int       @id @default(autoincrement())
+  nome                       String    @db.VarChar(50)
+  salt                       String
+  senha                      String
+  sessionToken               String?
+  ativo                      Boolean   @default(true)
+  userRole                   UserRole
+  valorMaximoOperacoes       Decimal?
+  permitirAutorizacaoPropria Boolean?
+  acessoAreasExternas        Boolean?
+  idGerencia                 Int?
+  Gerencia                   Gerencia? @relation(fields: [idGerencia], references: [id])
 
   Conta                 Conta[]
   ContaPagar            ContaPagar[]
