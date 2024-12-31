@@ -122,6 +122,8 @@ export class UsuariosService {
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     const usuario = await this.findOne(id);
     
+    console.log("Update for coolify");
+
     if (updateUsuarioDto.empresas) {
       const newEmpresas = updateUsuarioDto.empresas?.filter((emp) => {
         return !usuario.EmpresaUsuario.some((eu) => eu.Empresa.id === emp);
