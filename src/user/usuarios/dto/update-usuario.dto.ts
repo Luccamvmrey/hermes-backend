@@ -1,9 +1,8 @@
 import { Prisma } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional } from 'class-validator';
 
 export class UpdateUsuarioDto {
-  @IsString()
   @IsOptional()
   @ApiProperty({ required: false })
   usuarioData: Prisma.UsuarioUpdateInput;

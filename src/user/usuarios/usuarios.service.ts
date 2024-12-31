@@ -10,6 +10,7 @@ import { authentication, random } from '../../../utils/helpers';
 import { EmpresaUsuarioService } from '../../support-tables/empresa-usuario/empresa-usuario.service';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LogUsuarioInDto } from './dto/log-usuario-in.dto';
+import { log } from 'node:console';
 
 @Injectable()
 export class UsuariosService {
@@ -120,11 +121,13 @@ export class UsuariosService {
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     const usuario = await this.findOne(id);
-    const newEmpresas = updateUsuarioDto.empresas?.filter((emp) => {
-      return !usuario.EmpresaUsuario.some((eu) => eu.Empresa.id === emp);
-    });
-
+    
     if (updateUsuarioDto.empresas) {
+      const newEmpresas = updateUsuarioDto.empresas?.filter((emp) => {
+        return !usuario.EmpresaUsuario.some((eu) => eu.Empresa.id === emp);
+      });
+  
+      
       for (let empresa of newEmpresas) {
         await this.empresaUsuarioService.create({
           Empresa: { connect: { id: empresa } },
@@ -139,7 +142,7 @@ export class UsuariosService {
           id,
         },
         data: updateUsuarioDto.usuarioData,
-      });
+      }); 
     }
   }
 
