@@ -2,11 +2,13 @@ import { Prisma } from "@prisma/client";
 import { IsNumber } from "class-validator";
 
 export class PayValueDto {
-    @IsNumber()
-    valorPago: number;
+  @IsNumber()
+  valorPago: number;
 
-    @IsNumber()
-    percentualJuros: number;
+  @IsNumber()
+  percentualJuros: number;
 
-    Pagador: Prisma.UsuarioCreateNestedOneWithoutParcelasPagasInput;
+  Pagador: Prisma.UsuarioCreateNestedOneWithoutParcelasPagasInput;
+
+  Conta: Prisma.ContaCreateNestedOneWithoutPagamentoInput;
 }

@@ -157,6 +157,7 @@ export class PagamentosService {
           : null,
       percentualJuros: payValueDto.percentualJuros ?? null,
       Pagador: payValueDto.Pagador,
+      Conta: payValueDto.Conta,
     });
 
     await this.contasPagarService.updateValorPago(pagamento.idContaPagar);

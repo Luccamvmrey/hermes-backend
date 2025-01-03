@@ -51,6 +51,8 @@ model Conta {
   Empresa   Empresa @relation(fields: [idEmpresa], references: [id])
   Usuario   Usuario @relation(fields: [idUsuario], references: [id])
 
+  Pagamento Pagamento[]
+
   @@index([idBanco], map: "Conta_idBanco_fkey")
   @@index([idEmpresa], map: "Conta_idEmpresa_fkey")
   @@index([idUsuario], map: "Conta_idUsuario_fkey")
@@ -183,6 +185,8 @@ model Pagamento {
   lote               Int
   idContaPagar       Int
   ContaPagar         ContaPagar @relation(fields: [idContaPagar], references: [id], onDelete: Cascade)
+  idConta            Int?
+  Conta              Conta?     @relation(fields: [idConta], references: [id])
   idAutorizante      Int?
   Autorizante        Usuario?   @relation("Autorizante", fields: [idAutorizante], references: [id])
   idPagador          Int?
