@@ -11,6 +11,7 @@ import { EmpresaUsuarioService } from '../../support-tables/empresa-usuario/empr
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { LogUsuarioInDto } from './dto/log-usuario-in.dto';
 import { log } from 'node:console';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UsuariosService {
@@ -144,6 +145,21 @@ export class UsuariosService {
         data: updateUsuarioDto.usuarioData,
       }); 
     }
+  }
+
+  async updatePassword(changePasswordDto: ChangePasswordDto) {
+    const salt = random();
+    const hashedPassword = authentication(salt, changePasswordDto.newPassword);
+
+    return this.databaseService.usuario.update({
+      where: {
+        id: changePasswordDto.id,
+      },
+      data: {
+        senha: hashedPassword,
+        salt,
+      },
+    });
   }
 
   async remove(id: number) {

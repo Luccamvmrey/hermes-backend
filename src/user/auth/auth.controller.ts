@@ -1,9 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { LogUsuarioInDto } from '../usuarios/dto/log-usuario-in.dto';
 import { CreateUsuarioDto } from '../usuarios/dto/create-usuario.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { UsuarioEntity } from '../usuarios/entity/usuario.entity';
+import { ChangePasswordDto } from '../usuarios/dto/change-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,5 +20,10 @@ export class AuthController {
   @ApiOkResponse({ type: UsuarioEntity })
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuariosService.create(createUsuarioDto);
+  }
+
+  @Patch('password-change')
+  changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+    return this.usuariosService.updatePassword(changePasswordDto);
   }
 }
