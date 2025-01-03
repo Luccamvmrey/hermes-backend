@@ -93,7 +93,7 @@ model ContaPagar {
   FormaPagamento     FormaPagamento @relation(fields: [idFormaPagamento], references: [id])
   Pessoa             Pessoa         @relation(fields: [idFornecedor], references: [id])
   SubConta           SubConta       @relation(fields: [idSubConta], references: [id])
-  Usuario            Usuario        @relation(fields: [idUsuario], references: [id])
+  Usuario            Usuario        @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
   CentroCusto        CentroCusto    @relation(fields: [idCentroCusto], references: [id])
   Pagamento          Pagamento[]
   Arquivo            Arquivo[]

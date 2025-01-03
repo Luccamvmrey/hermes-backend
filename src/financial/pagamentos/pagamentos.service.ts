@@ -4,6 +4,7 @@ import { ContasPagarService } from '../contas-pagar/contas-pagar.service';
 import { Prisma } from '@prisma/client';
 import { PaginationDto } from '../../common/pagination/dto/pagination.dto';
 import { UsuariosService } from '../../user/usuarios/usuarios.service';
+import { PayValueDto } from './dto/pay-value.dto';
 
 @Injectable()
 export class PagamentosService {
@@ -139,10 +140,10 @@ export class PagamentosService {
     return pagamento;
   }
 
-  async updateValorPago(id: number, data: Prisma.PagamentoUpdateInput) {
+  async updateValorPago(id: number, payValueDto: PayValueDto | Prisma.PagamentoUpdateInput) {
     const pagamentoAntigo = await this.findOne(id);
     const valorAtualizado =
-      Number(pagamentoAntigo.valorPago) + Number(data.valorPago);
+      Number(pagamentoAntigo.valorPago) + Number(payValueDto.valorPago);
 
     const pagamento = await this.update(id, {
       valorPago: valorAtualizado,
@@ -154,8 +155,8 @@ export class PagamentosService {
         valorAtualizado >= Number(pagamentoAntigo.valorParcela)
           ? new Date()
           : null,
-      percentualJuros: data.percentualJuros ?? null,
-      Pagador: data.Pagador,
+      percentualJuros: payValueDto.percentualJuros ?? null,
+      Pagador: payValueDto.Pagador,
     });
 
     await this.contasPagarService.updateValorPago(pagamento.idContaPagar);

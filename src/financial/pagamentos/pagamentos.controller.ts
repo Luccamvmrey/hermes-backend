@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Query } from
 import { PagamentosService } from "./pagamentos.service";
 import { Prisma } from "@prisma/client";
 import { PaginationDto } from "../../common/pagination/dto/pagination.dto";
+import { PayValueDto } from "./dto/pay-value.dto";
 
 @Controller('pagamentos')
 export class PagamentosController {
@@ -31,6 +32,14 @@ export class PagamentosController {
       return this.pagamentosService.updateValorPago(id, updatePagamentoDto);
     }
     return this.pagamentosService.update(id, updatePagamentoDto);
+  }
+
+  @Patch('/pagar/:id')
+  realizarPagamento(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() PayValueDto: PayValueDto
+  ) {
+    return this.pagamentosService.updateValorPago(id, PayValueDto);
   }
 
   @Delete(':id')
