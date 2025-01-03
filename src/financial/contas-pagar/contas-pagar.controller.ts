@@ -41,7 +41,11 @@ export class ContasPagarController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Param('idContaPagar', ParseIntPipe) idContaPagar: number,
   ) {
-    return this.minioClientService.upload(files, idContaPagar);
+    return this.minioClientService.upload(
+      files,
+      'CONTA-PAGAR', 
+      idContaPagar
+    );
   }
 
   @Get()

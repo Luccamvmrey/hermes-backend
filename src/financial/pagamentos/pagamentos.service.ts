@@ -106,6 +106,7 @@ export class PagamentosService {
         },
         Autorizante: true,
         Pagador: true,
+        Arquivo: true,
       },
     });
   }

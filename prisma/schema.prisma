@@ -19,8 +19,10 @@ model Arquivo {
   id           Int        @id @default(autoincrement())
   originalName String
   filename     String
-  idContaPagar Int
-  ContaPagar   ContaPagar @relation(fields: [idContaPagar], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idContaPagar Int?
+  ContaPagar   ContaPagar? @relation(fields: [idContaPagar], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  idPagamento  Int?
+  Pagamento    Pagamento? @relation(fields: [idPagamento], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Banco {
@@ -191,6 +193,8 @@ model Pagamento {
   Autorizante        Usuario?   @relation("Autorizante", fields: [idAutorizante], references: [id])
   idPagador          Int?
   Pagador            Usuario?   @relation("Pagador", fields: [idPagador], references: [id])
+
+  Arquivo Arquivo[]
 
   @@index([idContaPagar], map: "Pagamento_idContaPagar_fkey")
 }
