@@ -15,7 +15,7 @@ enum UserRole {
   CAIXA
 }
 
-enum tipoFornecedor {
+enum TipoFornecedor {
   FISICA
   JURIDICA
 }
@@ -35,6 +35,8 @@ model Banco {
   nome  String  @unique @db.VarChar(50)
   ativo Boolean @default(true)
   Conta Conta[]
+
+  Pessoa Pessoa[]
 }
 
 model CentroCusto {
@@ -226,7 +228,12 @@ model Pessoa {
   idEmpresa        Int
   email            String?         @db.VarChar(100)
   telefone         String?         @db.VarChar(25)
-  tipo             tipoFornecedor?
+  tipoFornecedor   TipoFornecedor?
+  idBanco          Int?
+  Banco            Banco?          @relation(fields: [idBanco], references: [id])
+  agencia          String?         @db.VarChar(20)
+  contaCorrente    String?         @db.VarChar(20)
+  chavePix         String?         @db.VarChar(50)
 
   ContaPagar ContaPagar[]
   Empresa    Empresa      @relation(fields: [idEmpresa], references: [id])
@@ -248,7 +255,7 @@ model SubConta {
 model Usuario {
   id                         Int       @id @default(autoincrement())
   nome                       String    @db.VarChar(50)
-  email                      String?   @unique
+  email                      String?   
   salt                       String
   senha                      String
   sessionToken               String?

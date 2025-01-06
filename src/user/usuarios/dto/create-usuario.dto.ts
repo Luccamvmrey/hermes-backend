@@ -40,4 +40,10 @@ export class CreateUsuarioDto {
   @IsOptional()
   @ApiProperty({ required: false })
   empresas?: number[];
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  telefone: string;
 }

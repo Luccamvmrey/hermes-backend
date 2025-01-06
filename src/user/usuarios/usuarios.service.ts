@@ -33,6 +33,8 @@ export class UsuariosService {
       Gerencia,
       valorMaximoOperacoes,
       empresas,
+      email,
+      telefone,
     } = createUsuarioDto;
 
     // Definindo as permissões baseadas no cargo
@@ -57,6 +59,8 @@ export class UsuariosService {
         valorMaximoOperacoes,
         permitirAutorizacaoPropria: canSelfAuthorize,
         acessoAreasExternas: canAccessExternalAreas,
+        email,
+        telefone,
       },
     });
 

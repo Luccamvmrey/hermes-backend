@@ -1,4 +1,4 @@
-import { Pessoa } from "@prisma/client";
+import { $Enums, Pessoa } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class PessoaEntity implements Pessoa {
@@ -64,4 +64,19 @@ export class PessoaEntity implements Pessoa {
 
   @ApiProperty({ required: false })
   telefone: string;
+
+  @ApiProperty({ required: false })
+  tipoFornecedor: $Enums.TipoFornecedor;
+
+  @ApiProperty({ required: false })
+  idBanco: number;
+
+  @ApiProperty({ required: false })
+  agencia: string;
+
+  @ApiProperty({ required: false })
+  contaCorrente: string;
+
+  @ApiProperty({ required: false })
+  chavePix: string;
 }

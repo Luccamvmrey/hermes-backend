@@ -9,6 +9,9 @@ export class UsuarioEntity implements Usuario {
   nome: string;
 
   @ApiProperty()
+  email: string;
+
+  @ApiProperty()
   salt: string;
 
   @ApiProperty()
@@ -34,4 +37,7 @@ export class UsuarioEntity implements Usuario {
 
   @ApiProperty()
   ativo: boolean;
+
+  @ApiProperty()
+  telefone: string;
 }
