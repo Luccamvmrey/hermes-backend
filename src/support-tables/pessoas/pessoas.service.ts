@@ -14,7 +14,11 @@ export class PessoasService {
   }
 
   async findAll() {
-    return this.databaseService.pessoa.findMany();
+    return this.databaseService.pessoa.findMany({
+      include:{
+        Banco: true,
+      }
+    });
   }
 
   async findOne(id: number) {
