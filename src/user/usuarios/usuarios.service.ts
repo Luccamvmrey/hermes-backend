@@ -29,12 +29,8 @@ export class UsuariosService {
       permitirAutorizacaoPropria,
       acessoAreasExternas,
       senha,
-      nome,
-      Gerencia,
-      valorMaximoOperacoes,
       empresas,
-      email,
-      telefone,
+      ...rest
     } = createUsuarioDto;
 
     // Definindo as permissões baseadas no cargo
@@ -51,16 +47,12 @@ export class UsuariosService {
     // Criando o novo usuário
     const newUsuario = await this.databaseService.usuario.create({
       data: {
-        nome,
+        ...rest,
         senha: hashedPassword,
-        salt,
         userRole,
-        Gerencia,
-        valorMaximoOperacoes,
+        salt,
         permitirAutorizacaoPropria: canSelfAuthorize,
         acessoAreasExternas: canAccessExternalAreas,
-        email,
-        telefone,
       },
     });
 

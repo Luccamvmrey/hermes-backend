@@ -94,7 +94,11 @@ export class PagamentosService {
       include: {
         ContaPagar: {
           include: {
-            Pessoa: true,
+            Pessoa: {
+              include: {
+                Banco: true
+              }
+            },
             FormaPagamento: true,
             Pagamento: true,
             SubConta: true,
