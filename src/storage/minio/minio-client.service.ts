@@ -18,6 +18,7 @@ export class MinioClientService {
     resource: 'CONTA-PAGAR' | 'PAGAMENTO',
     idResource: number
   ) {
+      console.log(files);
     return await Promise.all(
       files.map(async (file) => {
         const timestamp = Date.now().toString();

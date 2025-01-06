@@ -1,4 +1,19 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Res, UseInterceptors } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Res,
+  UploadedFiles,
+  UseInterceptors
+} from "@nestjs/common";
 import { PagamentosService } from "./pagamentos.service";
 import { Prisma } from "@prisma/client";
 import { PaginationDto } from "../../common/pagination/dto/pagination.dto";
@@ -18,7 +33,7 @@ export class PagamentosController {
   @UseInterceptors(FilesInterceptor('files'))
   uploadPagamentoFiles(
     @Param('idPagamento', ParseIntPipe) idPagamento: number,
-    @Body() files: Array<Express.Multer.File>
+    @UploadedFiles() files: Array<Express.Multer.File>
   ) {
     return this.minioClientService.upload(
       files,
