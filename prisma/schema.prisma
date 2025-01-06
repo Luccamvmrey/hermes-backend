@@ -15,14 +15,19 @@ enum UserRole {
   CAIXA
 }
 
+enum tipoFornecedor {
+  FISICA
+  JURIDICA
+}
+
 model Arquivo {
-  id           Int        @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   originalName String
   filename     String
   idContaPagar Int?
   ContaPagar   ContaPagar? @relation(fields: [idContaPagar], references: [id], onDelete: Cascade, onUpdate: Cascade)
   idPagamento  Int?
-  Pagamento    Pagamento? @relation(fields: [idPagamento], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Pagamento    Pagamento?  @relation(fields: [idPagamento], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Banco {
@@ -200,29 +205,31 @@ model Pagamento {
 }
 
 model Pessoa {
-  id               Int          @id @default(autoincrement())
-  razao            String       @db.VarChar(50)
-  cnpj             String       @unique @db.VarChar(20)
-  endereco         String       @db.VarChar(50)
-  numero           String       @db.VarChar(10)
-  complemento      String?      @db.VarChar(40)
-  bairro           String       @db.VarChar(35)
-  cidade           String       @db.VarChar(35)
-  uf               String       @db.VarChar(2)
-  cep              String       @db.VarChar(8)
-  diaPagamento     Int?         @db.SmallInt
+  id               Int             @id @default(autoincrement())
+  razao            String          @db.VarChar(50)
+  cnpj             String          @unique @db.VarChar(20)
+  endereco         String          @db.VarChar(50)
+  numero           String          @db.VarChar(10)
+  complemento      String?         @db.VarChar(40)
+  bairro           String          @db.VarChar(35)
+  cidade           String          @db.VarChar(35)
+  uf               String          @db.VarChar(2)
+  cep              String          @db.VarChar(8)
+  diaPagamento     Int?            @db.SmallInt
   obs              String?
-  isFornecedor     Boolean      @default(true)
+  isFornecedor     Boolean         @default(true)
   isCliente        Boolean?
   isFabricante     Boolean?
   isTransportadora Boolean?
-  ativo            Boolean      @default(true)
-  dataCadastro     DateTime     @default(now())
+  ativo            Boolean         @default(true)
+  dataCadastro     DateTime        @default(now())
   idEmpresa        Int
-  email            String?      @db.VarChar(100)
-  telefone         String?      @db.VarChar(25)
-  ContaPagar       ContaPagar[]
-  Empresa          Empresa      @relation(fields: [idEmpresa], references: [id])
+  email            String?         @db.VarChar(100)
+  telefone         String?         @db.VarChar(25)
+  tipo             tipoFornecedor?
+
+  ContaPagar ContaPagar[]
+  Empresa    Empresa      @relation(fields: [idEmpresa], references: [id])
 
   @@index([idEmpresa], map: "Pessoa_idEmpresa_fkey")
 }
