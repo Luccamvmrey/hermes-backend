@@ -192,6 +192,7 @@ model Pagamento {
   statusAutorizacao  String     @default("Pendente")
   numCheque          Int?
   lote               Int
+  comentario         String?
   idContaPagar       Int
   ContaPagar         ContaPagar @relation(fields: [idContaPagar], references: [id], onDelete: Cascade)
   idConta            Int?
