@@ -207,6 +207,14 @@ model Pagamento {
   @@index([idContaPagar], map: "Pagamento_idContaPagar_fkey")
 }
 
+model PermissoesUsuario {
+  id        Int @id @default(autoincrement())
+  idUsuario Int
+  page      String
+
+  Usuario Usuario @relation(fields: [idUsuario], references: [id])
+}
+
 model Pessoa {
   id               Int             @id @default(autoincrement())
   razao            String          @db.VarChar(50)
@@ -275,4 +283,6 @@ model Usuario {
   EmpresaUsuario        EmpresaUsuario[]
   PagamentosAutorizados Pagamento[]      @relation("Autorizante")
   ParcelasPagas         Pagamento[]      @relation("Pagador")
+
+  PermissoesUsuario PermissoesUsuario[]
 }
