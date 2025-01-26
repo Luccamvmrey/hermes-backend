@@ -17,32 +17,31 @@ import { ContasContabeisModule } from './support-tables/contas-contabeis/contas-
 import { SubContasModule } from './support-tables/sub-contas/sub-contas.module';
 import { MinioClientModule } from './storage/minio/minio-client.module';
 import { ArquivosModule } from './storage/arquivos/arquivos.module';
-import { CentroCustoModule } from "./support-tables/centro-custo/centro-custo.module";
+import { CentroCustoModule } from './support-tables/centro-custo/centro-custo.module';
 import { PermissoesModule } from './user/permissoes/permissoes.module';
 
 @Module({
-    imports: [
-        DatabaseModule,
-        BancosModule,
-        ContasModule,
-        EmpresasModule,
-        PessoasModule,
-        FormasPagamentoModule,
-        GerenciasModule,
-        UsuariosModule,
-        AuthModule,
-        EmpresaUsuarioModule,
-        ContasPagarModule,
-        PagamentosModule,
-        ContasContabeisModule,
-        SubContasModule,
-        MinioClientModule,
-        ArquivosModule,
-        CentroCustoModule,
-        PermissoesModule
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    DatabaseModule,
+    BancosModule,
+    ContasModule,
+    EmpresasModule,
+    PessoasModule,
+    FormasPagamentoModule,
+    GerenciasModule,
+    UsuariosModule,
+    AuthModule,
+    EmpresaUsuarioModule,
+    ContasPagarModule,
+    PagamentosModule,
+    ContasContabeisModule,
+    SubContasModule,
+    MinioClientModule,
+    ArquivosModule,
+    CentroCustoModule,
+    PermissoesModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}

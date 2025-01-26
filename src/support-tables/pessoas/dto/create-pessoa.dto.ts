@@ -1,6 +1,6 @@
 import { $Enums, Prisma } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePessoaDto {
   @IsString()
@@ -93,7 +93,7 @@ export class CreatePessoaDto {
   Banco: Prisma.BancoCreateNestedOneWithoutPessoaInput;
 
   @ApiProperty({ required: false })
-  agencia?: string
+  agencia?: string;
 
   @ApiProperty({ required: false })
   tipoFornecedor?: $Enums.TipoFornecedor | null;

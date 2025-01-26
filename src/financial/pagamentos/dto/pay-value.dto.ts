@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { IsNumber } from "class-validator";
+import { Prisma } from '@prisma/client';
+import { IsNumber } from 'class-validator';
 
 export class PayValueDto {
   @IsNumber()

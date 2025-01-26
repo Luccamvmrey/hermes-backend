@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { $Enums, Prisma } from "@prisma/client";
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { $Enums, Prisma } from '@prisma/client';
 
 export class CreateUsuarioDto {
   @IsString()
@@ -16,7 +23,6 @@ export class CreateUsuarioDto {
   @IsNotEmpty()
   @ApiProperty()
   userRole: $Enums.UserRole;
-
 
   @IsOptional()
   @ApiProperty()

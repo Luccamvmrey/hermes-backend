@@ -1,5 +1,5 @@
-import { Conta } from "@prisma/client";
-import { ApiProperty } from "@nestjs/swagger";
+import { Conta } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ContaEntity implements Conta {
   @ApiProperty()

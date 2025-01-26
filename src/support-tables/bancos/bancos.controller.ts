@@ -5,8 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete, ParseIntPipe
-} from "@nestjs/common";
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { BancosService } from './bancos.service';
 import { CreateBancoDto } from './dto/create-banco.dto';
 import { UpdateBancoDto } from './dto/update-banco.dto';
@@ -37,7 +38,10 @@ export class BancosController {
 
   @Patch(':id')
   @ApiOkResponse({ type: BancoEntity })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateBancoDto: UpdateBancoDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateBancoDto: UpdateBancoDto,
+  ) {
     return this.bancosService.update(id, updateBancoDto);
   }
 

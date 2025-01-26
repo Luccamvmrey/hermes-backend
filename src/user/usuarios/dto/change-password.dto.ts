@@ -1,9 +1,9 @@
-import { IsAlphanumeric, IsNumber } from "class-validator";
+import { IsAlphanumeric, IsNumber } from 'class-validator';
 
 export class ChangePasswordDto {
-    @IsNumber()
-    id: number;
+  @IsNumber()
+  id: number;
 
-    @IsAlphanumeric()
-    newPassword: string;
+  @IsAlphanumeric()
+  newPassword: string;
 }

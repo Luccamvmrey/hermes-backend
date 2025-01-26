@@ -1,6 +1,6 @@
 import { FormaPagamento } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class FormaPagamentoEntity implements FormaPagamento {
   @ApiProperty()

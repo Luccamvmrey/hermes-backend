@@ -1,16 +1,16 @@
 import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { PermissoesService } from './permissoes.service';
-import { AddPermissaoDto } from './dto/add-permissao.dto';
+import { UpdatePermissoesDto } from './dto/update-permissoes.dto';
 
 @Controller('permissoes')
 export class PermissoesController {
   constructor(private readonly permissoesService: PermissoesService) {}
 
   @Post(':userId')
-  addPermissao(
+  updatePermissoes(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() addPermissaoDto: AddPermissaoDto,
+    @Body() updatePermissoesDto: UpdatePermissoesDto,
   ) {
-    return this.permissoesService.addPermissao(userId, addPermissaoDto);
+    return this.permissoesService.updatePermissoes(userId, updatePermissoesDto);
   }
 }

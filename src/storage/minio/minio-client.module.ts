@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MinioClientService } from './minio-client.service';
 import { MinioModule } from 'nestjs-minio-client';
 import { minioConfig } from './minio.config';
-import { ArquivosModule } from "../arquivos/arquivos.module";
+import { ArquivosModule } from '../arquivos/arquivos.module';
 
 @Module({
   imports: [

@@ -1,10 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { CreateContasPagarDto } from './dto/create-contas-pagar.dto';
 import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { DatabaseService } from '../../database/database.service';
 import { PagamentosService } from '../pagamentos/pagamentos.service';
 import { FormasPagamentoService } from '../../support-tables/formas-pagamento/formas-pagamento.service';
-import {Prisma} from "@prisma/client";
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ContasPagarService {

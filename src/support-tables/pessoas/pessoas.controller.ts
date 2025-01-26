@@ -3,10 +3,11 @@ import {
   Controller,
   Delete,
   Get,
-  Param, ParseIntPipe,
+  Param,
+  ParseIntPipe,
   Patch,
-  Post
-} from "@nestjs/common";
+  Post,
+} from '@nestjs/common';
 import { PessoasService } from './pessoas.service';
 import { CreatePessoaDto } from './dto/create-pessoa.dto';
 import { UpdatePessoaDto } from './dto/update-pessoa.dto';
@@ -37,7 +38,10 @@ export class PessoasController {
 
   @Patch(':id')
   @ApiOkResponse({ type: PessoaEntity })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePessoaDto: UpdatePessoaDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePessoaDto: UpdatePessoaDto,
+  ) {
     return this.pessoasService.update(id, updatePessoaDto);
   }
 

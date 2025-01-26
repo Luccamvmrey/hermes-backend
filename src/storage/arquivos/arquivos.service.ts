@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from "../../database/database.service";
+import { DatabaseService } from '../../database/database.service';
 
 @Injectable()
 export class ArquivosService {
@@ -8,8 +8,8 @@ export class ArquivosService {
   async create(
     fileName: string,
     originalName: string,
-    resource: 'CONTA-PAGAR' | 'PAGAMENTO', 
-    idResource: number
+    resource: 'CONTA-PAGAR' | 'PAGAMENTO',
+    idResource: number,
   ) {
     const fieldName = resource === 'CONTA-PAGAR' ? 'ContaPagar' : 'Pagamento';
 
@@ -19,10 +19,10 @@ export class ArquivosService {
         originalName: originalName,
         [fieldName]: {
           connect: {
-            id: idResource
-          }
-        }
-      }
+            id: idResource,
+          },
+        },
+      },
     });
   }
 }

@@ -5,8 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete, ParseIntPipe
-} from "@nestjs/common";
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { SubContasService } from './sub-contas.service';
 import { CreateSubContaDto } from './dto/create-sub-conta.dto';
 import { UpdateSubContaDto } from './dto/update-sub-conta.dto';

@@ -12,34 +12,30 @@ import {
   Query,
   Res,
   UploadedFiles,
-  UseInterceptors
-} from "@nestjs/common";
-import { PagamentosService } from "./pagamentos.service";
-import { Prisma } from "@prisma/client";
-import { PaginationDto } from "../../common/pagination/dto/pagination.dto";
-import { PayValueDto } from "./dto/pay-value.dto";
-import { FilesInterceptor } from "@nestjs/platform-express";
-import { MinioClientService } from "src/storage/minio/minio-client.service";
-import { Response } from "express";
+  UseInterceptors,
+} from '@nestjs/common';
+import { PagamentosService } from './pagamentos.service';
+import { Prisma } from '@prisma/client';
+import { PaginationDto } from '../../common/pagination/dto/pagination.dto';
+import { PayValueDto } from './dto/pay-value.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { MinioClientService } from 'src/storage/minio/minio-client.service';
+import { Response } from 'express';
 
 @Controller('pagamentos')
 export class PagamentosController {
   constructor(
     private readonly pagamentosService: PagamentosService,
-    private readonly minioClientService: MinioClientService
+    private readonly minioClientService: MinioClientService,
   ) {}
 
   @Post('/upload/:idPagamento')
   @UseInterceptors(FilesInterceptor('files'))
   uploadPagamentoFiles(
     @Param('idPagamento', ParseIntPipe) idPagamento: number,
-    @UploadedFiles() files: Array<Express.Multer.File>
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    return this.minioClientService.upload(
-      files,
-      'PAGAMENTO',
-      idPagamento
-    );
+    return this.minioClientService.upload(files, 'PAGAMENTO', idPagamento);
   }
 
   @Get()
@@ -60,7 +56,7 @@ export class PagamentosController {
   @Get('/download/:objectName')
   async downloadFile(
     @Param('objectName') objectName: string,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
     const readerStream = await this.minioClientService.downloadFile(objectName);
     readerStream.on('data', (chunk) => {
@@ -85,7 +81,7 @@ export class PagamentosController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updatePagamentoDto: Prisma.PagamentoUpdateInput
+    @Body() updatePagamentoDto: Prisma.PagamentoUpdateInput,
   ) {
     if (updatePagamentoDto.valorPago) {
       return this.pagamentosService.updateValorPago(id, updatePagamentoDto);
@@ -96,7 +92,7 @@ export class PagamentosController {
   @Patch('/pagar/:id')
   realizarPagamento(
     @Param('id', ParseIntPipe) id: number,
-    @Body() PayValueDto: PayValueDto
+    @Body() PayValueDto: PayValueDto,
   ) {
     return this.pagamentosService.updateValorPago(id, PayValueDto);
   }

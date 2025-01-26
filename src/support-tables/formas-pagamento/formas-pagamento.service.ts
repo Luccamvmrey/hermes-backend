@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
-import { CreateFormaPagamentoDto } from "./dto/create-forma-pagamento.dto";
-import { UpdateFormaPagamentoDto } from "./dto/update-forma-pagamento.dto";
+import { CreateFormaPagamentoDto } from './dto/create-forma-pagamento.dto';
+import { UpdateFormaPagamentoDto } from './dto/update-forma-pagamento.dto';
 
 @Injectable()
 export class FormasPagamentoService {

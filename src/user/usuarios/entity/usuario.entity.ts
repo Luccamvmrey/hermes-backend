@@ -24,7 +24,7 @@ export class UsuarioEntity implements Usuario {
   userRole: $Enums.UserRole;
 
   @ApiProperty()
-  valorMaximoOperacoes: Prisma.Decimal | null
+  valorMaximoOperacoes: Prisma.Decimal | null;
 
   @ApiProperty()
   permitirAutorizacaoPropria: boolean;

@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import {CreateCentroCustoDto} from "./create-centro-custo.dto";
+import { CreateCentroCustoDto } from './create-centro-custo.dto';
 
 export class UpdateCentroCustoDto extends PartialType(CreateCentroCustoDto) {}

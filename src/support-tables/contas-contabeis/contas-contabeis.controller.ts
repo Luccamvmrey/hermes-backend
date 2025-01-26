@@ -5,8 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete, ParseIntPipe
-} from "@nestjs/common";
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ContasContabeisService } from './contas-contabeis.service';
 import { CreateContaContabilDto } from './dto/create-conta-contabil.dto';
 import { UpdateContaContabilDto } from './dto/update-conta-contabil.dto';

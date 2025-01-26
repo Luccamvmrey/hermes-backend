@@ -16,9 +16,9 @@ export class MinioClientService {
   async upload(
     files: Array<Express.Multer.File>,
     resource: 'CONTA-PAGAR' | 'PAGAMENTO',
-    idResource: number
+    idResource: number,
   ) {
-      console.log(files);
+    console.log(files);
     return await Promise.all(
       files.map(async (file) => {
         const timestamp = Date.now().toString();
@@ -50,7 +50,7 @@ export class MinioClientService {
           fileName,
           file.originalname,
           resource,
-          idResource
+          idResource,
         );
       }),
     );

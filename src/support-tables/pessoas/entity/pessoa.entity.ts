@@ -1,5 +1,5 @@
-import { $Enums, Pessoa } from "@prisma/client";
-import { ApiProperty } from "@nestjs/swagger";
+import { $Enums, Pessoa } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class PessoaEntity implements Pessoa {
   @ApiProperty()

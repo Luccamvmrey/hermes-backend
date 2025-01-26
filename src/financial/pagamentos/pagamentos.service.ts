@@ -96,8 +96,8 @@ export class PagamentosService {
           include: {
             Pessoa: {
               include: {
-                Banco: true
-              }
+                Banco: true,
+              },
             },
             FormaPagamento: true,
             Pagamento: true,
@@ -131,7 +131,7 @@ export class PagamentosService {
   }
 
   async update(id: number, data: Prisma.PagamentoUpdateInput) {
-    let pagamento = await this.databaseService.pagamento.update({
+    const pagamento = await this.databaseService.pagamento.update({
       where: {
         id,
       },
@@ -145,7 +145,10 @@ export class PagamentosService {
     return pagamento;
   }
 
-  async updateValorPago(id: number, payValueDto: PayValueDto | Prisma.PagamentoUpdateInput) {
+  async updateValorPago(
+    id: number,
+    payValueDto: PayValueDto | Prisma.PagamentoUpdateInput,
+  ) {
     const pagamentoAntigo = await this.findOne(id);
     const valorAtualizado =
       Number(pagamentoAntigo.valorPago) + Number(payValueDto.valorPago);

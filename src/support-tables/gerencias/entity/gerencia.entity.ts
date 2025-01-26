@@ -1,5 +1,5 @@
-import { Gerencia } from "@prisma/client";
-import { ApiProperty } from "@nestjs/swagger";
+import { Gerencia } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class GerenciaEntity implements Gerencia {
   @ApiProperty()

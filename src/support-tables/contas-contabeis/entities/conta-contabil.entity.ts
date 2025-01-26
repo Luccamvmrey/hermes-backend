@@ -1,5 +1,5 @@
-import { ContaContabil } from "@prisma/client";
-import { ApiProperty } from "@nestjs/swagger";
+import { ContaContabil } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ContaContabilEntity implements ContaContabil {
   @ApiProperty()

@@ -3,11 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  Param, ParseIntPipe,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
-  Query
-} from "@nestjs/common";
+  Query,
+} from '@nestjs/common';
 import { GerenciasService } from './gerencias.service';
 import { CreateGerenciaDto } from './dto/create-gerencia.dto';
 import { UpdateGerenciaDto } from './dto/update-gerencia.dto';

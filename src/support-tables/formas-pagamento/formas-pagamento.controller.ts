@@ -5,8 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete, ParseIntPipe
-} from "@nestjs/common";
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { FormasPagamentoService } from './formas-pagamento.service';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { CreateFormaPagamentoDto } from './dto/create-forma-pagamento.dto';

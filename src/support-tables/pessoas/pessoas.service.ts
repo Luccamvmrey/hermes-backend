@@ -15,9 +15,9 @@ export class PessoasService {
 
   async findAll() {
     return this.databaseService.pessoa.findMany({
-      include:{
+      include: {
         Banco: true,
-      }
+      },
     });
   }
 

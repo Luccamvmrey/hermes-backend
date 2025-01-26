@@ -1,5 +1,5 @@
 import { Banco } from '@prisma/client';
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class BancoEntity implements Banco {
   @ApiProperty()

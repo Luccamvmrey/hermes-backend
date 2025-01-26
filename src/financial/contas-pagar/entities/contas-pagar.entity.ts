@@ -1,6 +1,6 @@
-import { ContaPagar } from "@prisma/client";
+import { ContaPagar } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ContasPagarEntity implements ContaPagar {
   @ApiProperty()
@@ -69,6 +69,6 @@ export class ContasPagarEntity implements ContaPagar {
   @ApiProperty()
   dataEmissao: Date;
 
-    @ApiProperty()
-    idCentroCusto: number;
+  @ApiProperty()
+  idCentroCusto: number;
 }
