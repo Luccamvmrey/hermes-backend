@@ -2,7 +2,6 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { ContasPagarService } from '../contas-pagar/contas-pagar.service';
 import { Prisma } from '@prisma/client';
-import { PaginationDto } from '../../common/pagination/dto/pagination.dto';
 import { UsuariosService } from '../../user/usuarios/usuarios.service';
 import { PayValueDto } from './dto/pay-value.dto';
 
@@ -15,34 +14,35 @@ export class PagamentosService {
     private readonly contasPagarService: ContasPagarService,
   ) {}
 
+  private getPagamentoInclude() {
+    return {
+      ContaPagar: {
+        include: {
+          Pessoa: { include: { Banco: true } },
+          FormaPagamento: true,
+          Pagamento: true,
+          SubConta: true,
+          ContaContabil: true,
+          Arquivo: true,
+          Usuario: true,
+          CentroCusto: true,
+        },
+      },
+      Autorizante: true,
+      Pagador: true,
+      Arquivo: true,
+    };
+  }
+
   async create(data: Prisma.PagamentoCreateInput) {
     return this.databaseService.pagamento.create({
       data,
     });
   }
 
-  async findAll(paginationDto: PaginationDto) {
-    const { offset, limit } = paginationDto;
-
+  async findAll() {
     return this.databaseService.pagamento.findMany({
-      skip: offset,
-      take: limit,
-      include: {
-        ContaPagar: {
-          include: {
-            Pessoa: true,
-            FormaPagamento: true,
-            Pagamento: true,
-            SubConta: true,
-            ContaContabil: true,
-            Arquivo: true,
-            Usuario: true,
-            CentroCusto: true,
-          },
-        },
-        Autorizante: true,
-        Pagador: true,
-      },
+      include: this.getPagamentoInclude(),
     });
   }
 
@@ -114,6 +114,7 @@ export class PagamentosService {
       },
     });
   }
+
   async findOne(id: number) {
     return this.databaseService.pagamento.findUnique({
       where: {

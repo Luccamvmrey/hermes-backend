@@ -9,14 +9,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
   Res,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { PagamentosService } from './pagamentos.service';
 import { Prisma } from '@prisma/client';
-import { PaginationDto } from '../../common/pagination/dto/pagination.dto';
 import { PayValueDto } from './dto/pay-value.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { MinioClientService } from 'src/storage/minio/minio-client.service';
@@ -39,8 +37,8 @@ export class PagamentosController {
   }
 
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.pagamentosService.findAll(paginationDto);
+  findAll() {
+    return this.pagamentosService.findAll();
   }
 
   @Get('user/:userId')
@@ -83,9 +81,6 @@ export class PagamentosController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePagamentoDto: Prisma.PagamentoUpdateInput,
   ) {
-    if (updatePagamentoDto.valorPago) {
-      return this.pagamentosService.updateValorPago(id, updatePagamentoDto);
-    }
     return this.pagamentosService.update(id, updatePagamentoDto);
   }
 
