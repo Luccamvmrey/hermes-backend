@@ -36,6 +36,9 @@ export class UsuarioEntity implements Usuario {
   idGerencia: number;
 
   @ApiProperty()
+  idSuperior: number;
+
+  @ApiProperty()
   ativo: boolean;
 
   @ApiProperty()

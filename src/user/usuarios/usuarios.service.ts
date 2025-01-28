@@ -97,6 +97,7 @@ export class UsuariosService {
         },
         Gerencia: true,
         PermissoesUsuario: true,
+        Superior: true,
       },
     });
   }

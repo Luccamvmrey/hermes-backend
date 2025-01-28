@@ -104,7 +104,11 @@ export class PagamentosService {
             SubConta: true,
             ContaContabil: true,
             Arquivo: true,
-            Usuario: true,
+            Usuario: {
+              include: {
+                Superior: true,
+              },
+            },
             CentroCusto: true,
           },
         },

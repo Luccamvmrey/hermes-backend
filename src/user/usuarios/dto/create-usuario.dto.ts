@@ -28,6 +28,9 @@ export class CreateUsuarioDto {
   @ApiProperty()
   Gerencia: Prisma.GerenciaCreateNestedOneWithoutUsuarioInput;
 
+  @IsOptional()
+  Superior: Prisma.UsuarioCreateNestedOneWithoutSubordinadosInput;
+
   @IsNumber()
   @ApiProperty()
   valorMaximoOperacoes: number;
