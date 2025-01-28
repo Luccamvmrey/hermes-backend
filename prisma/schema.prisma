@@ -145,6 +145,8 @@ model Empresa {
   Usuario        Usuario          @relation(fields: [idUsuario], references: [id])
   EmpresaUsuario EmpresaUsuario[]
   Pessoa         Pessoa[]
+  idSMTP         Int?
+  SMTP           SMTP?            @relation(fields: [idSMTP], references: [id])
 
   @@index([idUsuario], map: "Empresa_idUsuario_fkey")
 }
@@ -208,7 +210,7 @@ model Pagamento {
 }
 
 model PermissoesUsuario {
-  id        Int @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   idUsuario Int
   page      String
 
@@ -250,6 +252,19 @@ model Pessoa {
   @@index([idEmpresa], map: "Pessoa_idEmpresa_fkey")
 }
 
+model SMTP {
+  id   Int     @id @default(autoincrement())
+  host String  @db.VarChar(50)
+  from String
+  port Int
+  user String  @db.VarChar(50)
+  pass String  @db.VarChar(50)
+  ssl  Boolean
+  tls  Boolean
+
+  Empresa Empresa[]
+}
+
 model SubConta {
   id              Int           @id @default(autoincrement())
   nome            String
@@ -264,11 +279,11 @@ model SubConta {
 model Usuario {
   id                         Int       @id @default(autoincrement())
   nome                       String    @db.VarChar(50)
-  email                      String?   
+  email                      String?
   salt                       String
   senha                      String
   sessionToken               String?
-  telefone                   String?    
+  telefone                   String?
   ativo                      Boolean   @default(true)
   userRole                   UserRole
   valorMaximoOperacoes       Decimal?

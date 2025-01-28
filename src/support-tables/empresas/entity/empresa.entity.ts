@@ -63,5 +63,8 @@ export class EmpresaEntity implements Empresa {
   idUsuario: number;
 
   @ApiProperty({ required: false })
+  idSMTP: number;
+
+  @ApiProperty({ required: false })
   apelido: string;
 }
