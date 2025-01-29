@@ -13,8 +13,6 @@ export class DynamicEmailService {
     private readonly empresasService: EmpresasService,
   ) {}
 
-  // Método para enviar e-mail com configurações SMTP dinâmicas
-
   createConfig(createSMTPConfigDto: CreateSmtpConfigDto) {
     const { empresas, ...smtpConfig } = createSMTPConfigDto;
     this.databaseService.sMTP
