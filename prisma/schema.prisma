@@ -145,6 +145,8 @@ model Empresa {
   Usuario        Usuario          @relation(fields: [idUsuario], references: [id])
   EmpresaUsuario EmpresaUsuario[]
   Pessoa         Pessoa[]
+  idSMTP         Int?
+  SMTP           SMTP?            @relation(fields: [idSMTP], references: [id])
 
   @@index([idUsuario], map: "Empresa_idUsuario_fkey")
 }
@@ -248,6 +250,19 @@ model Pessoa {
   Empresa    Empresa      @relation(fields: [idEmpresa], references: [id])
 
   @@index([idEmpresa], map: "Pessoa_idEmpresa_fkey")
+}
+
+model SMTP {
+  id   Int     @id @default(autoincrement())
+  host String  @db.VarChar(50)
+  from String
+  port Int
+  user String  @db.VarChar(50)
+  pass String  @db.VarChar(50)
+  ssl  Boolean
+  tls  Boolean
+
+  Empresa Empresa[]
 }
 
 model SubConta {
