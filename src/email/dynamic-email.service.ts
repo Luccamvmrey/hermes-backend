@@ -15,15 +15,15 @@ export class DynamicEmailService {
 
   createConfig(createSMTPConfigDto: CreateSmtpConfigDto) {
     const { empresas, ...smtpConfig } = createSMTPConfigDto;
-    this.databaseService.sMTP
-      .create({ data: smtpConfig })
-      .then((smtpConfig) => {
-        empresas.forEach((empresa) => {
+    this.databaseService.sMTP.create({ data: smtpConfig }).then((smtpConfig) =>
+      Promise.all(
+        empresas.map((empresa) =>
           this.empresasService.update(empresa, {
             SMTP: { connect: { id: smtpConfig.id } },
-          });
-        });
-      });
+          }),
+        ),
+      ),
+    );
   }
 
   async sendEmail(sendEmailDto: SendEmailDto) {
