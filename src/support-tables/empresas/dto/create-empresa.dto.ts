@@ -94,7 +94,7 @@ export class CreateEmpresaDto {
   Usuario: Prisma.UsuarioCreateNestedOneWithoutEmpresaInput;
 
   @ApiProperty({ required: false })
-  SMTP : Prisma.SMTPCreateNestedOneWithoutEmpresaInput;
+  SMTP: Prisma.SMTPCreateNestedOneWithoutEmpresaInput;
 
   @ApiProperty({ required: false })
   Conta?: Prisma.ContaCreateNestedManyWithoutEmpresaInput;

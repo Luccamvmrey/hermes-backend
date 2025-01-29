@@ -1,6 +1,6 @@
 export class SendEmailDto {
-    to: string;
-    subject: string;
-    text: string;
-    idEmpresa: number;
+  to: string;
+  subject: string;
+  text: string;
+  idEmpresa: number;
 }

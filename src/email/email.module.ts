@@ -2,8 +2,8 @@
 import { Module } from '@nestjs/common';
 import { EmailController } from './email.controller';
 import { DynamicEmailService } from './dynamic-email.service';
-import {DatabaseModule} from "../database/database.module";
-import {EmpresasModule} from "../support-tables/empresas/empresas.module";
+import { DatabaseModule } from '../database/database.module';
+import { EmpresasModule } from '../support-tables/empresas/empresas.module';
 
 @Module({
   controllers: [EmailController],
