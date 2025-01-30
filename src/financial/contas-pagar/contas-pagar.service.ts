@@ -3,7 +3,8 @@ import { UpdateContasPagarDto } from './dto/update-contas-pagar.dto';
 import { DatabaseService } from '../../database/database.service';
 import { PagamentosService } from '../pagamentos/pagamentos.service';
 import { FormasPagamentoService } from '../../support-tables/formas-pagamento/formas-pagamento.service';
-import { Prisma } from '@prisma/client';
+import { ContaPagar, Pagamento, Prisma } from '@prisma/client';
+import { DynamicEmailService } from '../../email/dynamic-email.service';
 
 @Injectable()
 export class ContasPagarService {
@@ -12,13 +13,24 @@ export class ContasPagarService {
     @Inject(forwardRef(() => PagamentosService))
     private readonly pagamentosService: PagamentosService,
     private readonly formasPagamentoService: FormasPagamentoService,
+    private readonly emailService: DynamicEmailService,
   ) {}
 
   async create(data: Prisma.ContaPagarCreateInput) {
-    const contaPagar = await this.databaseService.contaPagar.create({
-      data,
-    });
+    const contaPagar = await this.databaseService.contaPagar.create({ data });
 
+    await this.criarParcelasPagamento(contaPagar);
+
+    if (!(await this.emailService.hasSMTPConfig(contaPagar.idEmpresa))) {
+      return contaPagar;
+    }
+
+    await this.enviarNotificacao(contaPagar.id);
+
+    return contaPagar;
+  }
+
+  private async criarParcelasPagamento(contaPagar: ContaPagar) {
     const formaPagamento = await this.formasPagamentoService.findOne(
       contaPagar.idFormaPagamento,
     );
@@ -27,19 +39,83 @@ export class ContasPagarService {
     const dataVencimento = new Date(contaPagar.dataVencimento);
     const valorParcela = +contaPagar.valor / parcelas;
 
-    for (let i = 0; i < parcelas; i++) {
-      const dataVencPagamento = new Date(dataVencimento);
-      dataVencPagamento.setDate(dataVencimento.getDate() + i * intervalo);
-      await this.pagamentosService.create({
-        dataVencimento: dataVencPagamento,
-        valorParcela,
-        lote: i + 1,
-        ContaPagar: { connect: { id: contaPagar.id } },
-      });
-    }
-
-    return contaPagar;
+    await Promise.all(
+      Array.from({ length: parcelas }, (_, i) =>
+        this.pagamentosService.create({
+          dataVencimento: new Date(
+            dataVencimento.setDate(dataVencimento.getDate() + i * intervalo),
+          ),
+          valorParcela,
+          lote: i + 1,
+          ContaPagar: { connect: { id: contaPagar.id } },
+        }),
+      ),
+    );
   }
+
+  private async enviarNotificacao(contaPagarId: number) {
+    const contaPagarWithDetails = await this.findOne(contaPagarId);
+    const body = this.gerarCorpoEmail(contaPagarWithDetails);
+
+    await this.emailService.sendEmail({
+      idEmpresa: contaPagarWithDetails.idEmpresa,
+      subject: 'Nova conta a pagar cadastrada',
+      to: contaPagarWithDetails.Usuario.Superior.email,
+      text: body,
+    });
+  }
+
+  private gerarCorpoEmail(contaPagarWithDetails: any): string {
+    const pagamentosDetalhes = this.gerarDetalhesPagamentos(
+      contaPagarWithDetails.Pagamento,
+    );
+
+    return `
+      Nova Conta a Pagar Cadastrada
+  
+      Responsável: ${contaPagarWithDetails.Usuario.Superior.nome}
+      Cadastrada por: ${contaPagarWithDetails.Usuario.nome}
+  
+      Detalhes:
+      - Empresa: ${contaPagarWithDetails.Empresa.apelido}
+      - Fornecedor: ${contaPagarWithDetails.Pessoa.razao}
+      - Data de Emissão: ${this.formatDate(contaPagarWithDetails.dataEmissao)}
+      - Conta Contábil: ${contaPagarWithDetails.ContaContabil.nome}
+      - Sub Conta: ${contaPagarWithDetails.SubConta.nome}
+      - Centro de Custo: ${contaPagarWithDetails.CentroCusto.nome}
+      - Descrição: ${contaPagarWithDetails.descricao}
+  
+      A compra foi parcelada em ${contaPagarWithDetails.Pagamento.length} vezes:
+      ${pagamentosDetalhes}
+  
+      Acesse o sistema para mais detalhes.
+    `
+      .split('\n')
+      .map((line) => line.trimStart())
+      .join('\n')
+      .trim();
+  }
+
+  private gerarDetalhesPagamentos(pagamentos: Pagamento[]): string {
+    return pagamentos
+      .map(
+        (pagamento, index) =>
+          `${index + 1}ª Parcela: R$ ${pagamento.valorParcela.toFixed(2)}
+        Vencimento: ${this.formatDate(pagamento.dataVencimento)}
+        ID do Pagamento: ${pagamento.id}`,
+      )
+      .map((line) => line.trimStart())
+      .join('\n\n')
+      .trim();
+  }
+
+  formatDate = (data: string | Date) => {
+    return new Date(data).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
   async findAll() {
     return this.databaseService.contaPagar.findMany({
@@ -59,11 +135,19 @@ export class ContasPagarService {
         id,
       },
       include: {
+        Empresa: true,
         Pessoa: true,
         FormaPagamento: true,
+        SubConta: true,
+        ContaContabil: true,
+        CentroCusto: true,
         Pagamento: true,
         Arquivo: true,
-        Usuario: true,
+        Usuario: {
+          include: {
+            Superior: true,
+          },
+        },
       },
     });
   }

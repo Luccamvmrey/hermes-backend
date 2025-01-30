@@ -55,6 +55,11 @@ export class DynamicEmailService {
         ),
       );
 
+      await this.databaseService.sMTP.update({
+        where: { id: existingConfig.id },
+        data: smtpConfig,
+      });
+
       return;
     }
 
@@ -96,10 +101,14 @@ export class DynamicEmailService {
     // Enviar o e-mail
     try {
       await transporter.sendMail(mailOptions);
-      console.log('E-mail enviado com sucesso!');
+      console.log('E-mail enviado com sucesso:');
     } catch (error) {
       console.error('Erro ao enviar e-mail:', error);
     }
+  }
+
+  async hasSMTPConfig(idEmpresa: number) {
+    return Boolean(await this.getSMTPConfig(idEmpresa));
   }
 
   async getSMTPConfig(idEmpresa: number) {

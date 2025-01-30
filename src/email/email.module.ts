@@ -9,5 +9,6 @@ import { EmpresasModule } from '../support-tables/empresas/empresas.module';
   controllers: [EmailController],
   providers: [DynamicEmailService],
   imports: [DatabaseModule, EmpresasModule],
+  exports: [DynamicEmailService],
 })
 export class EmailModule {}

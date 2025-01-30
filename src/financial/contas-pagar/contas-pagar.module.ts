@@ -5,6 +5,7 @@ import { DatabaseModule } from '../../database/database.module';
 import { PagamentosModule } from '../pagamentos/pagamentos.module';
 import { FormasPagamentoModule } from '../../support-tables/formas-pagamento/formas-pagamento.module';
 import { MinioClientModule } from 'src/storage/minio/minio-client.module';
+import { EmailModule } from '../../email/email.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { MinioClientModule } from 'src/storage/minio/minio-client.module';
     PagamentosModule,
     FormasPagamentoModule,
     MinioClientModule,
+    EmailModule,
   ],
   controllers: [ContasPagarController],
   providers: [ContasPagarService],
