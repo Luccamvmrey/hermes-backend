@@ -12,15 +12,63 @@ export class DynamicEmailService {
     private readonly empresasService: EmpresasService,
   ) {}
 
-  createConfig(createSMTPConfigDto: CreateSmtpConfigDto) {
+  async createConfig(createSMTPConfigDto: CreateSmtpConfigDto) {
     const { empresas, ...smtpConfig } = createSMTPConfigDto;
-    this.databaseService.sMTP.create({ data: smtpConfig }).then((smtpConfig) =>
-      Promise.all(
-        empresas.map((empresa) =>
+
+    const possibleSMTPConfig = await Promise.all(
+      empresas.map((empresa) => this.getSMTPConfig(empresa)),
+    );
+
+    const existingConfig = possibleSMTPConfig.find(Boolean);
+
+    if (existingConfig) {
+      const empresasComConfig = existingConfig.Empresa.map((emp) => emp.id);
+
+      // Empresas que devem ser adicionadas
+      const empresasParaAdicionar = empresas.filter(
+        (id) => !empresasComConfig.includes(id),
+      );
+
+      // Empresas que devem ser removidas
+      const empresasParaRemover = empresasComConfig.filter(
+        (id) => !empresas.includes(id),
+      );
+
+      // Adiciona novas empresas à configuração SMTP existente
+      await Promise.all(
+        empresasParaAdicionar.map((empresa) =>
           this.empresasService.update(empresa, {
-            SMTP: { connect: { id: smtpConfig.id } },
+            SMTP: { connect: { id: existingConfig.id } },
           }),
         ),
+      );
+
+      // Remove empresas que não devem mais estar associadas
+      await Promise.all(
+        empresasParaRemover.map((empresa) =>
+          this.databaseService.empresa.update({
+            where: { id: empresa },
+            data: {
+              SMTP: { disconnect: true },
+            },
+          }),
+        ),
+      );
+
+      return;
+    }
+
+    // Criar nova configuração se nenhuma existir
+    const newSMTPConfig = await this.databaseService.sMTP.create({
+      data: smtpConfig,
+    });
+
+    // Associa a nova configuração SMTP a todas as empresas informadas
+    await Promise.all(
+      empresas.map((empresa) =>
+        this.empresasService.update(empresa, {
+          SMTP: { connect: { id: newSMTPConfig.id } },
+        }),
       ),
     );
   }
@@ -56,8 +104,11 @@ export class DynamicEmailService {
 
   async getSMTPConfig(idEmpresa: number) {
     const { idSMTP } = await this.empresasService.findOne(idEmpresa);
+    if (!idSMTP) return null;
+
     return this.databaseService.sMTP.findUnique({
       where: { id: idSMTP },
+      include: { Empresa: true },
     });
   }
 }

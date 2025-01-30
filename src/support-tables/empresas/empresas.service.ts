@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
 import { CreateEmpresaDto } from './dto/create-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
@@ -32,6 +32,19 @@ export class EmpresasService {
     });
   }
 
+  async findOneByCnpj(cnpj: string) {
+    const formattedCnpj = this.formatCnpj(cnpj);
+    const empresa = await this.databaseService.empresa.findUnique({
+      where: {
+        cnpj: formattedCnpj,
+      },
+    });
+
+    if (!empresa) throw new NotFoundException();
+
+    return empresa;
+  }
+
   async update(id: number, data: UpdateEmpresaDto) {
     return this.databaseService.empresa.update({
       where: {
@@ -47,5 +60,11 @@ export class EmpresasService {
         id,
       },
     });
+  }
+
+  formatCnpj(cnpj: string) {
+    return cnpj
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
   }
 }

@@ -44,6 +44,12 @@ export class EmpresasController {
     return this.empresasService.findOne(id);
   }
 
+  @Get('cnpj/:cnpj')
+  @ApiOkResponse({ type: EmpresaEntity })
+  findOneByCnpj(@Param('cnpj') cnpj: string) {
+    return this.empresasService.findOneByCnpj(cnpj);
+  }
+
   @Patch(':id')
   @ApiOkResponse({ type: EmpresaEntity })
   update(

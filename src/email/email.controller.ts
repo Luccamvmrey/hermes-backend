@@ -1,5 +1,12 @@
 // email.controller.ts
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { DynamicEmailService } from './dynamic-email.service';
 import { CreateSmtpConfigDto } from './dto/create-smtp-config.dto';
 import { SendEmailDto } from './dto/send-email.dto';
@@ -10,13 +17,16 @@ export class EmailController {
 
   @Post('create-config')
   createConfig(@Body() createSMTPConfigDto: CreateSmtpConfigDto) {
-    this.dynamicEmailService.createConfig(createSMTPConfigDto);
-    return { message: 'Configuração de e-mail criada com sucesso!' };
+    return this.dynamicEmailService.createConfig(createSMTPConfigDto);
   }
 
   @Post('send-email')
   sendEmail(@Body() sendEmailDto: SendEmailDto) {
-    this.dynamicEmailService.sendEmail(sendEmailDto);
-    return { message: 'E-mail enviado com sucesso!' };
+    return this.dynamicEmailService.sendEmail(sendEmailDto);
+  }
+
+  @Get(':idEmpresa')
+  getSMTPConfig(@Param('idEmpresa', ParseIntPipe) idEmpresa: number) {
+    return this.dynamicEmailService.getSMTPConfig(idEmpresa);
   }
 }
