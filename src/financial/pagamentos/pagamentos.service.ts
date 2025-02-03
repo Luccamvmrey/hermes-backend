@@ -49,73 +49,75 @@ export class PagamentosService {
   async findAllByUser(userId: number) {
     const user = await this.usuariosService.findOne(userId);
 
-    // Construindo a cláusula inicial
-    let whereClause: any = {
+    const hoje = new Date();
+    const dataInicio = new Date();
+    dataInicio.setDate(hoje.getDate() - 60); // Últimos 60 dias
+    const dataFim = new Date();
+    dataFim.setDate(hoje.getDate() + 30); // Próximos 30 dias
+
+    // Cláusula base para pagamentos visíveis ao usuário
+    const whereClause: any = {
       ContaPagar: {
         Empresa: {
           EmpresaUsuario: {
-            some: {
-              idUsuario: userId,
-            },
+            some: { idUsuario: userId },
           },
         },
       },
+      OR: [
+        { dataVencimento: { gte: dataInicio, lte: dataFim } }, // Pagamentos nos últimos 60 e próximos 30 dias
+        {
+          statusPagamento: { not: 'Pago' },
+          dataVencimento: { lt: dataInicio },
+        }, // Pagamentos atrasados e não pagos
+      ],
     };
 
-    // Adicionando o filtro de gerência, se aplicável
+    // Se for um usuário gerenciado, filtra apenas pela gerência
     if (user?.idGerencia && !user?.acessoAreasExternas) {
-      whereClause.ContaPagar.Usuario = {
-        idGerencia: user?.idGerencia, // Apenas contas criadas por usuários na mesma gerência
-      };
+      Object.assign(whereClause.ContaPagar, {
+        Usuario: { idGerencia: user.idGerencia },
+      });
     }
 
-    // Condição para usuários do tipo SOLICITANTE
+    // Se for um SOLICITANTE, exibe apenas seus próprios pagamentos
     if (user?.userRole === 'SOLICITANTE') {
-      whereClause.ContaPagar = {
-        ...whereClause.ContaPagar,
-        idUsuario: userId, // Apenas pagamentos criados pelo usuário
-      };
+      Object.assign(whereClause.ContaPagar, { idUsuario: userId });
     }
 
-    // Condição para usuários do tipo CAIXA ou AUTORIZANTE
+    // Se for um CAIXA ou AUTORIZANTE, filtra pelo valor máximo permitido
     if (
       ['CAIXA', 'AUTORIZANTE'].includes(user?.userRole) &&
       user?.valorMaximoOperacoes != null
     ) {
-      whereClause = {
-        ...whereClause,
-        valorParcela: { lte: user?.valorMaximoOperacoes },
-      };
+      Object.assign(whereClause, {
+        valorParcela: { lte: user.valorMaximoOperacoes },
+      });
     }
 
-    // Query final
+    // Executa a consulta com paginação para evitar retorno excessivo
     return this.databaseService.pagamento.findMany({
       where: whereClause,
       include: {
         ContaPagar: {
           include: {
-            Pessoa: {
-              include: {
-                Banco: true,
-              },
-            },
+            Pessoa: { include: { Banco: true } },
             FormaPagamento: true,
             Pagamento: true,
             SubConta: true,
             ContaContabil: true,
             Arquivo: true,
-            Usuario: {
-              include: {
-                Superior: true,
-              },
-            },
+            Usuario: { include: { Superior: true } },
             CentroCusto: true,
+            Empresa: true,
           },
         },
         Autorizante: true,
         Pagador: true,
         Arquivo: true,
       },
+      take: 300, // Limita a quantidade de pagamentos retornados
+      orderBy: { dataVencimento: 'asc' }, // Ordena por vencimento
     });
   }
 

@@ -109,7 +109,7 @@ export class ContasPagarService {
       .trim();
   }
 
-  formatDate = (data: string | Date) => {
+  private formatDate = (data: string | Date) => {
     return new Date(data).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
