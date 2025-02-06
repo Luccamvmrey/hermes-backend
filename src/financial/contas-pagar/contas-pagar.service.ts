@@ -38,6 +38,7 @@ export class ContasPagarService {
 
     const dataVencimento = new Date(contaPagar.dataVencimento);
     const valorParcela = +contaPagar.valor / parcelas;
+    const valorAntecipado = contaPagar.percentualDesconto;
 
     await Promise.all(
       Array.from({ length: parcelas }, (_, i) =>
@@ -48,6 +49,7 @@ export class ContasPagarService {
           valorParcela,
           lote: i + 1,
           ContaPagar: { connect: { id: contaPagar.id } },
+          percentualDesconto: i === 0 ? valorAntecipado : 0,
         }),
       ),
     );
@@ -55,6 +57,13 @@ export class ContasPagarService {
 
   private async enviarNotificacao(contaPagarId: number) {
     const contaPagarWithDetails = await this.findOne(contaPagarId);
+    if (
+      !contaPagarWithDetails.Usuario.Superior ||
+      !contaPagarWithDetails.Usuario.Superior.email
+    ) {
+      return;
+    }
+
     const body = this.gerarCorpoEmail(contaPagarWithDetails);
 
     await this.emailService.sendEmail({
@@ -73,7 +82,7 @@ export class ContasPagarService {
     return `
       Nova Conta a Pagar Cadastrada
   
-      Responsável: ${contaPagarWithDetails.Usuario.Superior.nome}
+      Responsável: ${contaPagarWithDetails.Usuario.Superior.nome ?? 'N/A'}
       Cadastrada por: ${contaPagarWithDetails.Usuario.nome}
   
       Detalhes:
