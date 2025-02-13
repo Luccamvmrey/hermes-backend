@@ -116,7 +116,6 @@ export class PagamentosService {
         Pagador: true,
         Arquivo: true,
       },
-      take: 300, // Limita a quantidade de pagamentos retornados
       orderBy: { dataVencimento: 'asc' }, // Ordena por vencimento
     });
   }
