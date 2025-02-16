@@ -59,10 +59,7 @@ export class UsuariosService {
     if (empresas?.length) {
       await Promise.all(
         empresas.map((empresa) =>
-          this.empresaUsuarioService.create({
-            Empresa: { connect: { id: empresa } },
-            Usuario: { connect: { id: newUsuario.id } },
-          }),
+          this.empresaUsuarioService.create(newUsuario.id, empresa),
         ),
       );
     }
@@ -118,19 +115,15 @@ export class UsuariosService {
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    const usuario = await this.findOne(id);
+    await this.findOne(id);
 
+    await this.empresaUsuarioService.removeAll(id);
     if (updateUsuarioDto.empresas) {
-      const newEmpresas = updateUsuarioDto.empresas?.filter((emp) => {
-        return !usuario.EmpresaUsuario.some((eu) => eu.Empresa.id === emp);
-      });
-
-      for (const empresa of newEmpresas) {
-        await this.empresaUsuarioService.create({
-          Empresa: { connect: { id: empresa } },
-          Usuario: { connect: { id } },
-        });
-      }
+      await Promise.all(
+        updateUsuarioDto.empresas.map((empresaId) => {
+          return this.empresaUsuarioService.create(id, empresaId);
+        }),
+      );
     }
 
     if (updateUsuarioDto.usuarioData) {

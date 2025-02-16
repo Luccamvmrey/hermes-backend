@@ -1,14 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../../database/database.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class EmpresaUsuarioService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(data: Prisma.EmpresaUsuarioCreateInput) {
+  async create(userId: number, empresaId: number) {
     return this.databaseService.empresaUsuario.create({
-      data,
+      data: {
+        Usuario: { connect: { id: userId } },
+        Empresa: {
+          connect: { id: empresaId },
+        },
+      },
+    });
+  }
+
+  async removeAll(userId: number) {
+    return this.databaseService.empresaUsuario.deleteMany({
+      where: { idUsuario: userId },
     });
   }
 }
