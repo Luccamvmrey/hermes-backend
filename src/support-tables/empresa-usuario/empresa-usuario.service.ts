@@ -6,6 +6,8 @@ export class EmpresaUsuarioService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(userId: number, empresaId: number) {
+    await this.removeAll(userId);
+
     return this.databaseService.empresaUsuario.create({
       data: {
         Usuario: { connect: { id: userId } },

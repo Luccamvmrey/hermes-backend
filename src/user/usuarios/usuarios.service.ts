@@ -79,7 +79,7 @@ export class UsuariosService {
       sessionToken: authentication(salt, user.nome),
     };
 
-    return await this.update(user.id, { usuarioData: updatedFields });
+    return await this.update(user.id, { usuarioData: updatedFields }, true);
   }
 
   async findAll(nome?: string, sessionToken?: string) {
@@ -114,16 +114,23 @@ export class UsuariosService {
     });
   }
 
-  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+  async update(
+    id: number,
+    updateUsuarioDto: UpdateUsuarioDto,
+    isLogin?: boolean,
+  ) {
     await this.findOne(id);
 
-    await this.empresaUsuarioService.removeAll(id);
-    if (updateUsuarioDto.empresas) {
+    if (updateUsuarioDto.empresas || !isLogin) {
       await Promise.all(
         updateUsuarioDto.empresas.map((empresaId) => {
           return this.empresaUsuarioService.create(id, empresaId);
         }),
       );
+    }
+
+    if (updateUsuarioDto.empresas && updateUsuarioDto.empresas.length === 0) {
+      await this.empresaUsuarioService.removeAll(id);
     }
 
     if (updateUsuarioDto.usuarioData) {
